@@ -16,8 +16,8 @@
   <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-grid.min.css">
   <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-reboot.min.css">
-  <link rel="stylesheet" href="assets/smart-cart/minicart-theme.css">
   <link rel="stylesheet" href="assets/popup-overlay-plugin/style.css">
+  <link rel="stylesheet" href="assets/smart-cart/minicart-theme.css">
   <link rel="stylesheet" href="assets/dropdown/css/style.css">
   <link rel="stylesheet" href="assets/socicon/css/styles.css">
   <link rel="stylesheet" href="assets/theme/css/style.css">
@@ -26,7 +26,7 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bebas+Neue:400&display=swap"></noscript>
   <link rel="preload" href="https://fonts.googleapis.com/css?family=Exo+2:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Exo+2:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap"></noscript>
-  <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=BWq0hN"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=BWq0hN" type="text/css">
+  <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=XTd1Og"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=XTd1Og" type="text/css">
 
   
   
@@ -583,7 +583,7 @@
             background: #121212;
             color: #ffffff;
             min-height: 100vh;
-            padding: 20px;
+            padding: 0;
             margin: 0;
             overflow-x: hidden;
         }
@@ -924,6 +924,16 @@
             font-size: 1rem;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
+        }
+
+        .form-group select option {
+            background: #161616;
+            color: #ffffff;
+            padding: 10px;
+        }
+
+        .form-group select option:hover {
+            background: #2a2a2a;
         }
 
         .form-group input::placeholder,
@@ -1310,34 +1320,21 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="vehicleMake">Vehicle Make</label>
-                        <input type="text" id="vehicleMake" placeholder="e.g., Honda, Toyota, BMW">
+                        <input type="text" id="vehicleMake" placeholder="e.g., Nissan, Holden, Toyota">
                     </div>
                     <div class="form-group">
                         <label for="vehicleModel">Vehicle Model</label>
-                        <input type="text" id="vehicleModel" placeholder="e.g., Civic, Supra, M3">
+                        <input type="text" id="vehicleModel" placeholder="e.g., Patrol, Colorado, Landcruiser">
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="vehicleYear">Year</label>
-                        <input type="number" id="vehicleYear" min="1980" max="2025" placeholder="2020">
-                    </div>
-                    <div class="form-group">
-                        <label for="timeline">Project Timeline</label>
-                        <select id="timeline">
-                            <option value="">Select timeline</option>
-                            <option value="1-2 weeks">1-2 weeks</option>
-                            <option value="3-4 weeks">3-4 weeks</option>
-                            <option value="1-2 months">1-2 months</option>
-                            <option value="3+ months">3+ months</option>
-                            <option value="flexible">Flexible</option>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <label for="vehicleYear">Year</label>
+                    <input type="number" id="vehicleYear" min="1980" max="2025" placeholder="2020">
                 </div>
                 <div class="budget-slider-container">
                     <label>Project Budget</label>
                     <div class="budget-display" id="budgetDisplay">$5,000</div>
-                    <input type="range" id="budgetSlider" class="budget-slider" min="1000" max="50000" step="500" value="5000">
+                    <input type="range" id="budgetSlider" class="budget-slider" min="300" max="50000" step="100" value="5000">
                 </div>
                 <div class="form-group">
                     <label for="projectDescription">Project Description</label>
@@ -1485,10 +1482,9 @@
                     const vehicleMake = document.getElementById('vehicleMake').value;
                     const vehicleModel = document.getElementById('vehicleModel').value;
                     const vehicleYear = document.getElementById('vehicleYear').value;
-                    const timeline = document.getElementById('timeline').value;
                     const description = document.getElementById('projectDescription').value;
 
-                    if (!vehicleMake || !vehicleModel || !vehicleYear || !timeline || !description) {
+                    if (!vehicleMake || !vehicleModel || !vehicleYear || !description) {
                         showError('Please fill in all project details.');
                         return false;
                     }
@@ -1522,7 +1518,6 @@
                 vehicleMake: document.getElementById('vehicleMake').value,
                 vehicleModel: document.getElementById('vehicleModel').value,
                 vehicleYear: document.getElementById('vehicleYear').value,
-                timeline: document.getElementById('timeline').value,
                 budget: document.getElementById('budgetSlider').value,
                 description: document.getElementById('projectDescription').value,
                 firstName: document.getElementById('firstName').value,
@@ -1555,10 +1550,6 @@
                 <div class="summary-item">
                     <span>Vehicle:</span>
                     <span>${formData.vehicleYear} ${formData.vehicleMake} ${formData.vehicleModel}</span>
-                </div>
-                <div class="summary-item">
-                    <span>Timeline:</span>
-                    <span>${formData.timeline}</span>
                 </div>
                 <div class="summary-item">
                     <span>Budget:</span>
@@ -1645,7 +1636,6 @@
                             preferred_contact: formData.contactPreference,
                             best_time: 'Business Hours', // You can add this field to your form if needed
                             vehicle_info: `${formData.vehicleYear} ${formData.vehicleMake} ${formData.vehicleModel}`,
-                            timeline: formData.timeline,
                             budget: `${parseInt(formData.budget).toLocaleString()}`,
                             project_description: formData.description,
                             submission_time: new Date().toLocaleString(),
@@ -1669,7 +1659,6 @@
                             submitData.append('customer_phone', formData.phone);
                             submitData.append('preferred_contact', formData.contactPreference);
                             submitData.append('vehicle_info', `${formData.vehicleYear} ${formData.vehicleMake} ${formData.vehicleModel}`);
-                            submitData.append('timeline', formData.timeline);
                             submitData.append('budget', `${parseInt(formData.budget).toLocaleString()}`);
                             submitData.append('project_description', formData.description);
                             submitData.append('location', formData.location);
@@ -2012,7 +2001,7 @@
             background: #121212;
             color: #ffffff;
             min-height: 100vh;
-            padding: 20px;
+            padding: 0;
             margin: 0;
             overflow-x: hidden;
         }
@@ -2575,17 +2564,17 @@
                         <strong>Answers to <br> Frequently Asked Questions</strong>
                     </h2>
                 </div>
-                <div id="bootstrap-accordion_14" class="panel-group accordionStyles accordion" role="tablist" aria-multiselectable="true">
+                <div id="bootstrap-accordion_18" class="panel-group accordionStyles accordion" role="tablist" aria-multiselectable="true">
                     <div class="card">
                         <div class="card-header" role="tab" id="headingOne">
-                            <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse1_14" aria-expanded="false" aria-controls="collapse1">
+                            <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse1_18" aria-expanded="false" aria-controls="collapse1">
                                 <h4 class="panel-title-edit mbr-fonts-style display-5"><strong>What types of fabrication work do you offer?</strong></h4>
                                 <div class="icon-wrapper">
                                     <span class="sign mbr-iconfont mobi-mbri-plus mobi-mbri"></span>
                                 </div>
                             </a>
                         </div>
-                        <div id="collapse1_14" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_14">
+                        <div id="collapse1_18" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_18">
                             <div class="panel-body">
                                 <p class="panel-text mbr-fonts-style display-7">
                                     We handle everything from custom piping, intercooler setups, and exhaust systems to full chassis modifications, roll cages, and structural reinforcements. If it’s metal and it moves, we can build it.
@@ -2595,14 +2584,14 @@
                     </div>
                     <div class="card">
                         <div class="card-header" role="tab" id="headingTwo">
-                            <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse2_14" aria-expanded="false" aria-controls="collapse2">
+                            <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse2_18" aria-expanded="false" aria-controls="collapse2">
                                 <h4 class="panel-title-edit mbr-fonts-style display-5"><strong>Can you build parts from scratch or modify existing ones?</strong></h4>
                                 <div class="icon-wrapper">
                                     <span class="sign mbr-iconfont mobi-mbri-plus mobi-mbri"></span>
                                 </div>
                             </a>
                         </div>
-                        <div id="collapse2_14" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_14">
+                        <div id="collapse2_18" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_18">
                             <div class="panel-body">
                                 <p class="panel-text mbr-fonts-style display-7">Yes to both. We can fabricate completely new components to suit your project or modify and improve your existing parts for better fit, strength, or performance.<br></p>
                             </div>
@@ -2610,14 +2599,14 @@
                     </div>
                     <div class="card">
                         <div class="card-header" role="tab" id="headingThree">
-                            <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse3_14" aria-expanded="false" aria-controls="collapse3">
+                            <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse3_18" aria-expanded="false" aria-controls="collapse3">
                                 <h4 class="panel-title-edit mbr-fonts-style display-5"><strong>Do I need to book in advance for fabrication work?</strong></h4>
                                 <div class="icon-wrapper">
                                     <span class="sign mbr-iconfont mobi-mbri-plus mobi-mbri"></span>
                                 </div>
                             </a>
                         </div>
-                        <div id="collapse3_14" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_14">
+                        <div id="collapse3_18" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_18">
                             <div class="panel-body">
                                 <p class="panel-text mbr-fonts-style display-7">
                                     Definitely — most jobs require a booking due to high demand. Reach out with what you need, and we’ll line up a time that suits your build schedule.
@@ -2627,14 +2616,14 @@
                     </div>
                     <div class="card">
                         <div class="card-header" role="tab" id="headingFour">
-                            <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse4_14" aria-expanded="false" aria-controls="collapse4">
+                            <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse4_18" aria-expanded="false" aria-controls="collapse4">
                                 <h4 class="panel-title-edit mbr-fonts-style display-5"><strong>What’s the turnaround time for custom jobs?</strong></h4>
                                 <div class="icon-wrapper">
                                     <span class="sign mbr-iconfont mobi-mbri-plus mobi-mbri"></span>
                                 </div>
                             </a>
                         </div>
-                        <div id="collapse4_14" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingFour" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_14">
+                        <div id="collapse4_18" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingFour" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_18">
                             <div class="panel-body">
                                 <p class="panel-text mbr-fonts-style display-7">
                                     It depends on the scope. Small jobs might be done within a few days, while full builds or complex setups can take a few weeks. We’ll give you a realistic timeframe upfront.
@@ -2644,14 +2633,14 @@
                     </div>
                     <div class="card">
                         <div class="card-header" role="tab" id="headingFive">
-                            <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse5_14" aria-expanded="false" aria-controls="collapse5">
+                            <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse5_18" aria-expanded="false" aria-controls="collapse5">
                                 <h4 class="panel-title-edit mbr-fonts-style display-5"><strong>Can you work with customer-supplied parts or designs?</strong></h4>
                                 <div class="icon-wrapper">
                                     <span class="sign mbr-iconfont mobi-mbri-plus mobi-mbri"></span>
                                 </div>
                             </a>
                         </div>
-                        <div id="collapse5_14" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingFive" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_14">
+                        <div id="collapse5_18" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingFive" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_18">
                             <div class="panel-body">
                                 <p class="panel-text mbr-fonts-style display-7">
                                     Absolutely. Whether you've got parts in-hand or a rough sketch of what you’re chasing, we can work with your materials and ideas to bring them to life.
@@ -2661,14 +2650,14 @@
                     </div>
                     <div class="card">
                         <div class="card-header" role="tab" id="headingSix">
-                            <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse6_14" aria-expanded="false" aria-controls="collapse6">
+                            <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse6_18" aria-expanded="false" aria-controls="collapse6">
                                 <h4 class="panel-title-edit mbr-fonts-style display-5"><strong>Is your work certified for motorsport or road use?</strong></h4>
                                 <div class="icon-wrapper">
                                     <span class="sign mbr-iconfont mobi-mbri-plus mobi-mbri"></span>
                                 </div>
                             </a>
                         </div>
-                        <div id="collapse6_14" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingSix" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_14">
+                        <div id="collapse6_18" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingSix" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_18">
                             <div class="panel-body">
                                 <p class="panel-text mbr-fonts-style display-7">
                                     We fabricate to high standards and can meet motorsport requirements. If certification is needed, let us know during booking and we’ll ensure everything complies with the relevant specs.

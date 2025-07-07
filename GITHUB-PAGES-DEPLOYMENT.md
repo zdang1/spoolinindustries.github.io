@@ -83,7 +83,17 @@ git push origin main
 5. Select **"/ (root)"** folder
 6. Click **"Save"**
 
-### Step 4: Configure Gallery Settings
+### Step 4: Create GitHub Personal Access Token
+
+1. Go to [GitHub Settings > Developer settings > Personal access tokens](https://github.com/settings/tokens)
+2. Click **"Generate new token"** → **"Generate new token (classic)"**
+3. Give it a name: `Spoolin Industries Gallery`
+4. Select expiration: **No expiration** (or 1 year)
+5. Select scopes: **Check `repo` (Full control of private repositories)**
+6. Click **"Generate token"**
+7. **COPY THE TOKEN** - you won't see it again!
+
+### Step 5: Configure Gallery Settings
 
 1. Open `gallery.html` in your repository
 2. Click the **pencil icon** to edit
@@ -93,13 +103,16 @@ git push origin main
 const GITHUB_CONFIG = {
     repoOwner: 'YOUR-GITHUB-USERNAME',     // Replace with your username
     repoName: 'spoolin-industries',        // Replace with your repo name
-    branch: 'main'                         // Usually 'main' or 'master'
+    branch: 'main',                        // Usually 'main' or 'master'
+    token: 'ghp_xxxxxxxxxxxxxxxxxxxx'      // Paste your token here
 };
 ```
 
 4. Commit the changes
 
-### Step 5: Access Your Live Website
+⚠️ **Security Note:** Keep your token private! Don't share your repository if it contains the token.
+
+### Step 6: Access Your Live Website
 
 Your website will be available at:
 ```
@@ -114,24 +127,24 @@ https://YOUR-USERNAME.github.io/spoolin-industries/
 - **Email:** `spoolinindustries@outlook.com`
 - **Password:** `1234`
 
-### Adding New Images
+### Adding New Images - **FULLY AUTOMATED!**
 
 1. Go to your gallery page
 2. Click **"Admin"** and login
 3. Upload images using the admin panel
-4. The system will automatically download:
-   - Updated `gallery-manifest.json`
-   - All image files with unique names
-5. Follow the on-screen instructions to update your repository
+4. **That's it!** The system automatically:
+   - ✅ Uploads images directly to GitHub
+   - ✅ Updates the gallery manifest
+   - ✅ Commits changes to your repository
+   - ✅ Makes images visible to all users in 1-2 minutes
 
-### Repository Update Process
+### No Manual Steps Required!
 
-When you upload images, you need to:
-
-1. **Add image files** to `assets/images/gallery/` folder in your repository
-2. **Replace** `gallery-manifest.json` with the downloaded version
-3. **Commit changes** to your repository
-4. **Wait 1-2 minutes** for GitHub Pages to rebuild
+Unlike traditional static hosting, this system is **fully automated**:
+- ❌ No manual file uploads
+- ❌ No downloading files
+- ❌ No manual commits
+- ✅ Upload → Live automatically!
 
 ## 🔄 Updating Your Website
 

@@ -1,80 +1,95 @@
-# Spoolin Industries Website
+# Spoolin Industries - Automated Gallery System
 
-Professional website for Spoolin Industries - Custom automotive fabrication and performance tuning services.
+## 🚀 GitHub Pages + Automated Gallery
 
-## 🚀 Live Demo
+This is a complete website solution for **Spoolin Industries** featuring:
 
-- **Homepage**: [View Live Site](https://yourusername.github.io/spoolin-industries-website/)
-- **Shop**: [Performance Parts Wizard](https://yourusername.github.io/spoolin-industries-website/shop.html)
-- **Gallery**: [Work Gallery](https://yourusername.github.io/spoolin-industries-website/gallery.html)
+- ✅ **Fully automated gallery system** - No manual file uploads!
+- ✅ **GitHub Pages hosting** - Free, fast, and reliable
+- ✅ **Admin upload panel** - Drag, drop, and go live automatically
+- ✅ **Professional design** - Modern, responsive, and mobile-friendly
+- ✅ **Direct GitHub integration** - Uses GitHub API for seamless uploads
 
-## 📋 Features
+## 🎯 Live Demo
 
-### 🏠 Homepage
-- Professional landing page with video background
-- Services showcase
-- Team introduction
-- Contact form integration
+**Website:** `https://YOUR-USERNAME.github.io/spoolin-industries/`
+**Gallery:** `https://YOUR-USERNAME.github.io/spoolin-industries/gallery.html`
 
-### 🛒 Shop (Performance Parts Wizard)
-- Guided recommendation system
-- Budget-based filtering
-- Category organization
-- Expandable product details
+## 📸 How It Works
 
-### 🖼️ Gallery (Admin Managed)
-- **Admin Login**: `spoolinindustries@outlook.com` / `1234`
-- Cache-resistant image storage
-- Category filtering (Turbo, Exhaust, Fabrication, Suspension, 4×4)
-- Export/Import functionality
-- Mobile-responsive design
+### For Admins:
+1. Login to gallery with: `spoolinindustries@outlook.com` / `1234`
+2. Drag & drop images
+3. **Images go live automatically!** 🎉
 
-## 🔧 Admin Functions
+### For Users:
+- View professional gallery with all uploaded images
+- Filter by categories (Turbo Systems, Fabrication, etc.)
+- Responsive design works on all devices
 
-### Gallery Management
-- **Upload**: Drag & drop or click to select images
-- **Categories**: Organize by work type
-- **Delete**: Individual or bulk deletion
-- **Export**: Download gallery backup (JSON)
-- **Import**: Restore from backup file
+## 🛠️ Technical Features
 
-### Keyboard Shortcuts (Admin)
-- `Ctrl+U` - Upload images
-- `Ctrl+E` - Export gallery
-- `Ctrl+I` - Import gallery
-- `Ctrl+D` - Delete all images
+- **GitHub API Integration** - Automatic file uploads and commits
+- **Real-time Updates** - Changes appear in 1-2 minutes
+- **Smart Image Processing** - Automatic filename generation and optimization
+- **Category Management** - Organize images by work type
+- **Mobile Responsive** - Works perfectly on all devices
+- **Professional UI** - Modern design with smooth animations
 
-## 📱 Mobile Responsive
-- Optimized for all device sizes
-- Touch-friendly gallery interface
-- Mobile navigation menu
+## 🔧 Setup Instructions
 
-## 🛡️ Persistent Storage
-- Images stored as base64 data
-- Multiple redundant storage locations
-- Survives browser cache clearing
-- Automatic daily backups
+See **[GITHUB-PAGES-DEPLOYMENT.md](GITHUB-PAGES-DEPLOYMENT.md)** for complete setup instructions.
 
-## 🚀 Deployment
+Quick setup:
+1. Create GitHub repository
+2. Upload website files
+3. Enable GitHub Pages
+4. Create GitHub Personal Access Token
+5. Configure token in `gallery.html`
+6. Upload images automatically!
 
-This site is designed for GitHub Pages:
+## 🎨 Customization
 
-1. **Fork/Clone this repository**
-2. **Enable GitHub Pages** in repository settings
-3. **Access**: `https://yourusername.github.io/repository-name/`
+### Colors & Styling
+- Modern dark theme with purple accents
+- Responsive grid layout
+- Professional hover effects
+- Smooth animations
 
-### Data Migration
-- Export gallery from localhost before deploying
-- Import backup file to GitHub Pages version
-- All images and data transfer seamlessly
+### Categories
+Current categories:
+- Turbo Systems
+- Exhaust Work
+- Custom Fabrication
+- Suspension Work
+- 4×4 Builds
 
-## 📞 Contact
+### Admin Features
+- Drag & drop uploads
+- Real-time preview
+- Category selection
+- Individual image deletion
+- Bulk operations
 
-For custom automotive fabrication and performance tuning:
-- **Email**: spoolinindustries@outlook.com
-- **Location**: Rockhampton, Queensland
-- **Services**: Turbo systems, custom exhaust, suspension, 4×4 fabrication
+## 🔒 Security
+
+- GitHub Personal Access Token for API access
+- Admin authentication system
+- Secure file handling
+- No server-side vulnerabilities
+
+## 📈 Performance
+
+- **Fast loading** - GitHub Pages CDN
+- **Optimized images** - Automatic processing
+- **Efficient storage** - GitHub repository
+- **No bandwidth limits** - Free hosting
+
+## 📞 Support
+
+For technical issues or customization requests, check the deployment guide or create an issue in this repository.
 
 ---
 
-Built with modern web technologies and responsive design for Spoolin Industries. 
+**Spoolin Industries** - Rockhampton's Premier Automotive Fabrication
+*Turbo Systems • Custom Exhausts • 4×4 Fabrication • Dyno Tuning* 

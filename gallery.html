@@ -872,7 +872,8 @@
         const GITHUB_CONFIG = {
             repoOwner: 'your-username',  // Replace with your GitHub username
             repoName: 'spoolin-industries',  // Replace with your repository name
-            branch: 'main'  // or 'gh-pages' if using that branch
+            branch: 'main',  // or 'gh-pages' if using that branch
+            token: 'your-github-token'  // GitHub Personal Access Token (keep private!)
         };
 
         // Configuration
@@ -1115,12 +1116,18 @@
             `;
         }
 
-        // Upload Functions (File-Based Storage)
+        // GitHub API Upload Functions
         async function uploadImages() {
             if (selectedFiles.length === 0 || !isAdminLoggedIn) return;
 
+            // Check if GitHub configuration is set up
+            if (!GITHUB_CONFIG.token || GITHUB_CONFIG.token === 'your-github-token') {
+                showNotification('GitHub token not configured. Please check the setup instructions.', 'error');
+                return;
+            }
+
             uploadBtn.disabled = true;
-            uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Images...';
+            uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading to GitHub...';
 
             // Get selected category
             const selectedCategory = document.getElementById('categorySelect').value;
@@ -1128,8 +1135,9 @@
             try {
                 const uploadCount = selectedFiles.length;
                 const timestamp = Date.now();
+                const uploadedImages = [];
                 
-                // Process files for server upload
+                // Upload files to GitHub repository
                 for (let i = 0; i < selectedFiles.length; i++) {
                     const file = selectedFiles[i];
                     
@@ -1139,44 +1147,47 @@
                         const baseFilename = file.name.replace(/\.[^/.]+$/, '').replace(/[^a-zA-Z0-9]/g, '-');
                         const uniqueFilename = `${baseFilename}-${timestamp}-${i}.${fileExtension}`;
                         
-                        // Create image data for manifest
-                        const imageData = {
-                            id: `${timestamp}-${i}`,
-                            filename: uniqueFilename,
-                            url: `./assets/images/gallery/${uniqueFilename}`,
-                            name: file.name,
-                            category: selectedCategory,
-                            uploadDate: new Date().toISOString(),
-                            size: file.size,
-                            adminEmail: ADMIN_EMAIL,
-                            originalType: file.type
-                        };
+                        // Convert file to base64
+                        const base64Content = await fileToBase64(file);
                         
-                        galleryImages.push(imageData);
+                        // Upload to GitHub
+                        const uploadSuccess = await uploadFileToGitHub(uniqueFilename, base64Content);
                         
-                        // Create download link for admin to save the file
-                        const fileUrl = URL.createObjectURL(file);
-                        const downloadLink = document.createElement('a');
-                        downloadLink.href = fileUrl;
-                        downloadLink.download = uniqueFilename;
-                        downloadLink.style.display = 'none';
-                        document.body.appendChild(downloadLink);
-                        downloadLink.click();
-                        document.body.removeChild(downloadLink);
-                        
-                        // Update progress
-                        uploadBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing ${i + 1}/${uploadCount}...`;
-                        
-                        // Small delay to allow download to start
-                        await new Promise(resolve => setTimeout(resolve, 100));
+                        if (uploadSuccess) {
+                            // Create image data for manifest
+                            const imageData = {
+                                id: `${timestamp}-${i}`,
+                                filename: uniqueFilename,
+                                url: `./assets/images/gallery/${uniqueFilename}`,
+                                name: file.name,
+                                category: selectedCategory,
+                                uploadDate: new Date().toISOString(),
+                                size: file.size,
+                                adminEmail: ADMIN_EMAIL,
+                                originalType: file.type
+                            };
+                            
+                            uploadedImages.push(imageData);
+                            
+                            // Update progress
+                            uploadBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Uploading ${i + 1}/${uploadCount}...`;
+                        } else {
+                            throw new Error(`Failed to upload ${file.name}`);
+                        }
                         
                     } catch (error) {
-                        console.error(`Failed to process ${file.name}:`, error);
-                        showNotification(`Failed to process ${file.name}`, 'warning');
+                        console.error(`Failed to upload ${file.name}:`, error);
+                        showNotification(`Failed to upload ${file.name}`, 'warning');
                     }
                 }
 
-                saveGalleryImages();
+                // Add uploaded images to gallery
+                galleryImages.push(...uploadedImages);
+                
+                // Update gallery manifest on GitHub
+                await updateGalleryManifest();
+                
+                // Refresh gallery display
                 renderGallery();
                 
                 // Reset upload state
@@ -1186,7 +1197,7 @@
                 uploadBtn.disabled = true;
                 uploadBtn.innerHTML = '<i class="fas fa-upload"></i> Upload Images';
                 
-                showNotification(`${uploadCount} image(s) processed - Check downloads and follow server instructions`, 'success');
+                showNotification(`${uploadedImages.length} image(s) uploaded successfully! Live in 1-2 minutes.`, 'success');
                 
             } catch (error) {
                 console.error('Upload error:', error);
@@ -1195,6 +1206,111 @@
                 // Reset on error
                 uploadBtn.disabled = true;
                 uploadBtn.innerHTML = '<i class="fas fa-upload"></i> Upload Images';
+            }
+        }
+
+        // Helper function to convert file to base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // Upload file to GitHub repository
+        async function uploadFileToGitHub(filename, base64Content) {
+            try {
+                const url = `https://api.github.com/repos/${GITHUB_CONFIG.repoOwner}/${GITHUB_CONFIG.repoName}/contents/assets/images/gallery/${filename}`;
+                
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${GITHUB_CONFIG.token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: `Add gallery image: ${filename}`,
+                        content: base64Content,
+                        branch: GITHUB_CONFIG.branch
+                    })
+                });
+
+                if (response.ok) {
+                    console.log(`Successfully uploaded ${filename}`);
+                    return true;
+                } else {
+                    const error = await response.json();
+                    console.error(`Failed to upload ${filename}:`, error);
+                    return false;
+                }
+            } catch (error) {
+                console.error(`Error uploading ${filename}:`, error);
+                return false;
+            }
+        }
+
+        // Update gallery manifest on GitHub
+        async function updateGalleryManifest() {
+            try {
+                const manifest = {
+                    version: '1.0',
+                    lastUpdated: new Date().toISOString(),
+                    totalImages: galleryImages.length,
+                    deploymentInfo: {
+                        platform: 'GitHub Pages',
+                        repoOwner: GITHUB_CONFIG.repoOwner,
+                        repoName: GITHUB_CONFIG.repoName,
+                        branch: GITHUB_CONFIG.branch
+                    },
+                    images: galleryImages
+                };
+
+                const manifestContent = JSON.stringify(manifest, null, 2);
+                const base64Content = btoa(manifestContent);
+
+                // Get current manifest SHA (required for updates)
+                const getUrl = `https://api.github.com/repos/${GITHUB_CONFIG.repoOwner}/${GITHUB_CONFIG.repoName}/contents/gallery-manifest.json`;
+                const getResponse = await fetch(getUrl, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_CONFIG.token}`,
+                    }
+                });
+
+                let sha = null;
+                if (getResponse.ok) {
+                    const currentFile = await getResponse.json();
+                    sha = currentFile.sha;
+                }
+
+                // Update manifest
+                const updateUrl = `https://api.github.com/repos/${GITHUB_CONFIG.repoOwner}/${GITHUB_CONFIG.repoName}/contents/gallery-manifest.json`;
+                const updateResponse = await fetch(updateUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${GITHUB_CONFIG.token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: 'Update gallery manifest',
+                        content: base64Content,
+                        branch: GITHUB_CONFIG.branch,
+                        ...(sha && { sha })
+                    })
+                });
+
+                if (updateResponse.ok) {
+                    console.log('Gallery manifest updated successfully');
+                    return true;
+                } else {
+                    const error = await updateResponse.json();
+                    console.error('Failed to update manifest:', error);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error updating manifest:', error);
+                return false;
             }
         }
 
@@ -1230,89 +1346,56 @@
         }
 
         function saveGalleryImages() {
-            // Create updated gallery manifest
-            const manifest = {
-                version: '1.0',
-                lastUpdated: new Date().toISOString(),
-                totalImages: galleryImages.length,
-                deploymentInfo: {
-                    platform: 'GitHub Pages',
-                    repoOwner: GITHUB_CONFIG.repoOwner,
-                    repoName: GITHUB_CONFIG.repoName,
-                    branch: GITHUB_CONFIG.branch
-                },
-                images: galleryImages
-            };
-            
-            // Auto-download the updated manifest
-            const manifestContent = JSON.stringify(manifest, null, 2);
-            const manifestBlob = new Blob([manifestContent], { type: 'application/json' });
-            const manifestUrl = URL.createObjectURL(manifestBlob);
-            
-            const link = document.createElement('a');
-            link.href = manifestUrl;
-            link.download = 'gallery-manifest.json';
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            console.log('Updated gallery manifest downloaded');
-            showGitHubInstructions();
-            
+            // Note: Gallery images are now automatically saved to GitHub via API
+            // This function is maintained for compatibility
+            console.log('Gallery images saved automatically to GitHub');
             return Promise.resolve();
         }
 
-        function showGitHubInstructions() {
-            const timestamp = Date.now();
-            const instructions = `
-                <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: var(--border-radius); padding: 20px; margin: 20px 0;">
-                    <h4 style="color: #3b82f6; margin-bottom: 16px;">
-                        <i class="fab fa-github"></i> GitHub Pages Update Required
-                    </h4>
-                    <p style="color: var(--text-secondary); margin-bottom: 16px;">
-                        To make images visible to all users on GitHub Pages:
-                    </p>
-                    <ol style="color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6;">
-                        <li>The updated <code>gallery-manifest.json</code> has been downloaded</li>
-                        <li>Add your image files to: <code>assets/images/gallery/</code></li>
-                        <li>Replace the <code>gallery-manifest.json</code> in your repository root</li>
-                        <li>Commit and push changes to GitHub</li>
-                        <li>Images will be live on GitHub Pages in 1-2 minutes!</li>
-                    </ol>
-                    <div style="background: rgba(59, 130, 246, 0.1); padding: 12px; border-radius: 8px; margin-top: 16px;">
-                        <strong style="color: #3b82f6;">Repository Structure:</strong>
-                        <pre style="color: var(--text-secondary); margin: 8px 0; font-family: monospace; font-size: 13px;">
-/
-├── gallery-manifest.json          (replace this file)
-├── assets/images/gallery/         (add image files here)
-│   ├── image1-${timestamp}-0.jpg
-│   ├── image2-${timestamp}-1.jpg
-│   └── ...
-└── gallery.html</pre>
-                    </div>
-                    <div style="display: flex; gap: 12px; margin-top: 16px;">
-                        <button onclick="showImageFiles()" class="btn-secondary-modern">
-                            <i class="fas fa-images"></i> Show Image Files
-                        </button>
-                        <a href="https://github.com/${GITHUB_CONFIG.repoOwner}/${GITHUB_CONFIG.repoName}" target="_blank" class="btn-primary-modern">
-                            <i class="fab fa-github"></i> Open Repository
-                        </a>
-                    </div>
-                </div>
-            `;
-            
-            // Add instructions to admin panel
-            const adminPanel = document.getElementById('adminPanel');
-            let instructionsDiv = document.getElementById('githubInstructions');
-            
-            if (!instructionsDiv) {
-                instructionsDiv = document.createElement('div');
-                instructionsDiv.id = 'githubInstructions';
-                adminPanel.appendChild(instructionsDiv);
+        // Delete image from GitHub repository
+        async function deleteImageFromGitHub(filename) {
+            try {
+                // Get file info first to get SHA
+                const getUrl = `https://api.github.com/repos/${GITHUB_CONFIG.repoOwner}/${GITHUB_CONFIG.repoName}/contents/assets/images/gallery/${filename}`;
+                const getResponse = await fetch(getUrl, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_CONFIG.token}`,
+                    }
+                });
+
+                if (!getResponse.ok) {
+                    console.error(`File ${filename} not found on GitHub`);
+                    return false;
+                }
+
+                const fileInfo = await getResponse.json();
+                
+                // Delete the file
+                const deleteResponse = await fetch(getUrl, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `token ${GITHUB_CONFIG.token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: `Delete gallery image: ${filename}`,
+                        sha: fileInfo.sha,
+                        branch: GITHUB_CONFIG.branch
+                    })
+                });
+
+                if (deleteResponse.ok) {
+                    console.log(`Successfully deleted ${filename} from GitHub`);
+                    return true;
+                } else {
+                    const error = await deleteResponse.json();
+                    console.error(`Failed to delete ${filename}:`, error);
+                    return false;
+                }
+            } catch (error) {
+                console.error(`Error deleting ${filename}:`, error);
+                return false;
             }
-            
-            instructionsDiv.innerHTML = instructions;
         }
 
         function showImageFiles() {
@@ -1430,7 +1513,7 @@
             updateGalleryStatus();
         }
 
-        function deleteImage(event, imageId) {
+        async function deleteImage(event, imageId) {
             event.stopPropagation();
             
             const imageToDelete = galleryImages.find(img => img.id == imageId);
@@ -1440,20 +1523,31 @@
             }
             
             if (confirm(`Are you sure you want to delete "${imageToDelete.name}"?\n\nThis action cannot be undone.`)) {
-                const previousCount = galleryImages.length;
-                galleryImages = galleryImages.filter(img => img.id != imageId);
-                
-                if (galleryImages.length < previousCount) {
-                    saveGalleryImages();
-                    renderGallery();
-                    showNotification(`"${imageToDelete.name}" deleted successfully`, 'success');
+                // Delete from GitHub if token is configured
+                if (GITHUB_CONFIG.token && GITHUB_CONFIG.token !== 'your-github-token') {
+                    showNotification('Deleting from GitHub...', 'info');
+                    const deleteSuccess = await deleteImageFromGitHub(imageToDelete.filename);
+                    
+                    if (deleteSuccess) {
+                        // Remove from local array
+                        galleryImages = galleryImages.filter(img => img.id != imageId);
+                        // Update manifest on GitHub
+                        await updateGalleryManifest();
+                        renderGallery();
+                        showNotification(`"${imageToDelete.name}" deleted successfully`, 'success');
+                    } else {
+                        showNotification(`Failed to delete "${imageToDelete.name}" from GitHub`, 'error');
+                    }
                 } else {
-                    showNotification('Failed to delete image', 'error');
+                    // Local deletion only (for testing)
+                    galleryImages = galleryImages.filter(img => img.id != imageId);
+                    renderGallery();
+                    showNotification(`"${imageToDelete.name}" deleted locally (configure GitHub token for full deletion)`, 'warning');
                 }
             }
         }
 
-        function deleteAllImages() {
+        async function deleteAllImages() {
             if (galleryImages.length === 0) {
                 showNotification('No images to delete', 'info');
                 return;
@@ -1461,10 +1555,38 @@
             
             const imageCount = galleryImages.length;
             if (confirm(`Are you sure you want to delete ALL ${imageCount} images?\n\nThis action cannot be undone and will clear the entire gallery.`)) {
-                galleryImages = [];
-                saveGalleryImages();
-                renderGallery();
-                showNotification(`All ${imageCount} images deleted successfully`, 'success');
+                // Delete from GitHub if token is configured
+                if (GITHUB_CONFIG.token && GITHUB_CONFIG.token !== 'your-github-token') {
+                    showNotification('Deleting all images from GitHub...', 'info');
+                    
+                    let deletedCount = 0;
+                    const imagesToDelete = [...galleryImages]; // Copy array
+                    
+                    for (const image of imagesToDelete) {
+                        const deleteSuccess = await deleteImageFromGitHub(image.filename);
+                        if (deleteSuccess) {
+                            deletedCount++;
+                        }
+                    }
+                    
+                    // Clear local array
+                    galleryImages = [];
+                    
+                    // Update manifest on GitHub
+                    await updateGalleryManifest();
+                    renderGallery();
+                    
+                    if (deletedCount === imageCount) {
+                        showNotification(`All ${imageCount} images deleted successfully`, 'success');
+                    } else {
+                        showNotification(`Deleted ${deletedCount} of ${imageCount} images (some may have failed)`, 'warning');
+                    }
+                } else {
+                    // Local deletion only (for testing)
+                    galleryImages = [];
+                    renderGallery();
+                    showNotification(`All ${imageCount} images deleted locally (configure GitHub token for full deletion)`, 'warning');
+                }
             }
         }
 

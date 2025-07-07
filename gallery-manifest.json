@@ -1,24 +1,12 @@
 {
   "version": "1.0",
-  "lastUpdated": "2025-07-07T11:20:00.361Z",
-  "totalImages": 1,
+  "lastUpdated": "2024-01-01T00:00:00.000Z",
+  "totalImages": 0,
   "deploymentInfo": {
     "platform": "GitHub Pages",
-    "repoOwner": "zdang1",
-    "repoName": "spoolinindustries.github.io",
+    "repoOwner": "your-username",
+    "repoName": "spoolin-industries",
     "branch": "main"
   },
-  "images": [
-    {
-      "id": "1751887199245-0",
-      "filename": "11111-png-1-500x500-1751887199245-0.png",
-      "url": "./assets/images/gallery/11111-png-1-500x500-1751887199245-0.png",
-      "name": "11111.png-1-500x500.png",
-      "category": "fabrication",
-      "uploadDate": "2025-07-07T11:20:00.360Z",
-      "size": 118057,
-      "adminEmail": "spoolinindustries@outlook.com",
-      "originalType": "image/png"
-    }
-  ]
-}
+  "images": []
+} 

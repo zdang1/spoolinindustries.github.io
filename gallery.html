@@ -27,6 +27,8 @@
     <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=XTd1Og">
     <link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=XTd1Og" type="text/css">
     
+    <!-- GitHub Pages Compatible Gallery System -->
+    
     <style>
         /* CSS Variables */
         :root {
@@ -705,6 +707,7 @@
                         <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#aheader1-6"><strong>HOME</strong></a></li>
                         <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#custom-html-21"><strong>SERVICES</strong></a></li>
                         <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="shop.html"><strong>SHOP</strong></a></li>
+                        <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="gallery.html"><strong>OUR WORK</strong></a></li>
                         <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#features07-1c"><strong>TEAM</strong></a></li>
                         <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#list01-15"><strong>FAQ</strong></a></li>
                         <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#contacts01-14"><strong>CONTACT US</strong></a></li>
@@ -750,14 +753,6 @@
                     <h3>Admin Panel - Local Gallery</h3>
                     <div>
                         <span id="adminEmail" style="color: var(--text-secondary); margin-right: 16px;"></span>
-                        <button class="btn-secondary-modern" onclick="exportGallery()" style="margin-right: 8px; background: transparent; color: var(--success-color); border-color: var(--success-color);">
-                            <i class="fas fa-download"></i>
-                            Export
-                        </button>
-                        <button class="btn-secondary-modern" onclick="importGallery()" style="margin-right: 8px; background: transparent; color: var(--primary-color); border-color: var(--primary-color);">
-                            <i class="fas fa-upload"></i>
-                            Import
-                        </button>
                         <button class="btn-secondary-modern" onclick="deleteAllImages()" style="margin-right: 8px; background: transparent; color: var(--error-color); border-color: var(--error-color);">
                             <i class="fas fa-trash-alt"></i>
                             Clear All
@@ -769,21 +764,19 @@
                     </div>
                 </div>
                 <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--border-radius); padding: 12px; margin-bottom: 20px; font-size: 14px; color: var(--text-secondary);">
-                    <i class="fas fa-shield-alt" style="color: #10b981; margin-right: 8px;"></i>
-                    <strong>Persistent Storage:</strong> Images are converted to base64 and stored in multiple browser locations for maximum persistence.
+                    <i class="fas fa-server" style="color: #10b981; margin-right: 8px;"></i>
+                    <strong>Server-Based Gallery:</strong> Images are uploaded to the server and visible to all users.
                     <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(16, 185, 129, 0.2);">
                         <strong>Gallery Status:</strong> <span id="galleryStatus">Loading...</span>
                     </div>
                     <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(16, 185, 129, 0.2); font-size: 12px;">
                         <strong>Shortcuts:</strong> 
                         <span style="background: rgba(16, 185, 129, 0.2); padding: 2px 6px; border-radius: 3px; margin: 0 4px;">Ctrl+U</span>Upload
-                        <span style="background: rgba(16, 185, 129, 0.2); padding: 2px 6px; border-radius: 3px; margin: 0 4px;">Ctrl+E</span>Export
-                        <span style="background: rgba(16, 185, 129, 0.2); padding: 2px 6px; border-radius: 3px; margin: 0 4px;">Ctrl+I</span>Import
                         <span style="background: rgba(16, 185, 129, 0.2); padding: 2px 6px; border-radius: 3px; margin: 0 4px;">Ctrl+D</span>Delete All
                     </div>
                     <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(16, 185, 129, 0.2); font-size: 12px; color: var(--success-color);">
-                        <i class="fas fa-check-circle" style="margin-right: 4px;"></i>
-                        <strong>Cache-Resistant:</strong> Images won't be lost when clearing browser cache. Export for extra safety.
+                        <i class="fas fa-globe" style="margin-right: 4px;"></i>
+                        <strong>Public Gallery:</strong> Images are visible to all users and browsers once uploaded to server.
                     </div>
                 </div>
                 <div class="upload-section">
@@ -875,6 +868,13 @@
 
     <!-- JavaScript -->
     <script>
+        // GitHub Pages Configuration
+        const GITHUB_CONFIG = {
+            repoOwner: 'your-username',  // Replace with your GitHub username
+            repoName: 'spoolin-industries',  // Replace with your repository name
+            branch: 'main'  // or 'gh-pages' if using that branch
+        };
+
         // Configuration
         const ADMIN_EMAIL = 'spoolinindustries@outlook.com';
         const ADMIN_PASSWORD = '1234'; // In production, use proper authentication
@@ -1052,14 +1052,6 @@
                             e.preventDefault();
                             document.getElementById('fileInput').click();
                             break;
-                        case 'e':
-                            e.preventDefault();
-                            exportGallery();
-                            break;
-                        case 'i':
-                            e.preventDefault();
-                            importGallery();
-                            break;
                     }
                 }
             });
@@ -1123,49 +1115,64 @@
             `;
         }
 
-
-
-        // Upload Functions (Enhanced Persistent Storage)
+        // Upload Functions (File-Based Storage)
         async function uploadImages() {
             if (selectedFiles.length === 0 || !isAdminLoggedIn) return;
 
             uploadBtn.disabled = true;
-            uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Converting & Uploading...';
+            uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Images...';
 
             // Get selected category
             const selectedCategory = document.getElementById('categorySelect').value;
             
             try {
                 const uploadCount = selectedFiles.length;
+                const timestamp = Date.now();
                 
-                // Convert images to base64 for permanent storage
+                // Process files for server upload
                 for (let i = 0; i < selectedFiles.length; i++) {
                     const file = selectedFiles[i];
                     
                     try {
-                        // Convert to base64 (this makes it cache-resistant)
-                        const base64Data = await fileToBase64(file);
+                        // Generate unique filename
+                        const fileExtension = file.name.split('.').pop().toLowerCase();
+                        const baseFilename = file.name.replace(/\.[^/.]+$/, '').replace(/[^a-zA-Z0-9]/g, '-');
+                        const uniqueFilename = `${baseFilename}-${timestamp}-${i}.${fileExtension}`;
                         
+                        // Create image data for manifest
                         const imageData = {
-                            id: Date.now() + Math.random() + i,
-                            url: base64Data, // Store as base64 instead of blob URL
+                            id: `${timestamp}-${i}`,
+                            filename: uniqueFilename,
+                            url: `./assets/images/gallery/${uniqueFilename}`,
                             name: file.name,
                             category: selectedCategory,
                             uploadDate: new Date().toISOString(),
                             size: file.size,
                             adminEmail: ADMIN_EMAIL,
-                            isPermanent: true, // Flag for permanent storage
                             originalType: file.type
                         };
                         
                         galleryImages.push(imageData);
                         
+                        // Create download link for admin to save the file
+                        const fileUrl = URL.createObjectURL(file);
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = fileUrl;
+                        downloadLink.download = uniqueFilename;
+                        downloadLink.style.display = 'none';
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                        
                         // Update progress
-                        uploadBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Converting ${i + 1}/${uploadCount}...`;
+                        uploadBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing ${i + 1}/${uploadCount}...`;
+                        
+                        // Small delay to allow download to start
+                        await new Promise(resolve => setTimeout(resolve, 100));
                         
                     } catch (error) {
-                        console.error(`Failed to convert ${file.name}:`, error);
-                        showNotification(`Failed to convert ${file.name}`, 'warning');
+                        console.error(`Failed to process ${file.name}:`, error);
+                        showNotification(`Failed to process ${file.name}`, 'warning');
                     }
                 }
 
@@ -1179,7 +1186,7 @@
                 uploadBtn.disabled = true;
                 uploadBtn.innerHTML = '<i class="fas fa-upload"></i> Upload Images';
                 
-                showNotification(`${uploadCount} image(s) uploaded and permanently stored`, 'success');
+                showNotification(`${uploadCount} image(s) processed - Check downloads and follow server instructions`, 'success');
                 
             } catch (error) {
                 console.error('Upload error:', error);
@@ -1191,154 +1198,176 @@
             }
         }
 
-        // Enhanced Storage Functions
+        // GitHub Pages Storage Functions
         function loadGalleryImages() {
-            // Try multiple storage locations for better persistence
-            const storageKeys = ['galleryImages', 'spoolin_gallery_backup', 'spoolin_gallery_persistent', 'spoolin_auto_backup'];
-            let loaded = false;
+            showNotification('Loading gallery...', 'info');
             
-            for (const key of storageKeys) {
-                const saved = localStorage.getItem(key);
-                if (saved) {
-                    try {
-                        const data = JSON.parse(saved);
-                        // Handle both direct arrays and backup format
-                        galleryImages = Array.isArray(data) ? data : (data.images || []);
-                        
-                        // Filter out any invalid images (like broken blob URLs)
-                        galleryImages = galleryImages.filter(img => {
-                            return img.url && img.name && img.category;
-                        });
-                        
-                        loaded = true;
-                        console.log(`Gallery loaded from ${key}:`, galleryImages.length, 'images');
-                        
-                        // If we loaded from a backup, save it to primary storage
-                        if (key !== 'galleryImages' && galleryImages.length > 0) {
-                            saveGalleryImages();
-                        }
-                        break;
-                    } catch (error) {
-                        console.warn(`Failed to load from ${key}:`, error);
+            // Load images from gallery manifest file
+            fetch('./gallery-manifest.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('No gallery manifest found');
                     }
-                }
-            }
-            
-            if (!loaded) {
-                galleryImages = [];
-                console.log('No saved gallery found, starting fresh');
-            }
-            
-            renderGallery();
+                    return response.json();
+                })
+                .then(data => {
+                    galleryImages = data.images || [];
+                    console.log('Gallery loaded from GitHub Pages:', galleryImages.length, 'images');
+                    renderGallery();
+                    
+                    if (galleryImages.length === 0) {
+                        showNotification('Gallery is empty - admin can upload images', 'info');
+                    } else {
+                        showNotification(`Loaded ${galleryImages.length} images from gallery`, 'success');
+                    }
+                })
+                .catch(error => {
+                    console.log('No existing gallery manifest, starting fresh');
+                    galleryImages = [];
+                    renderGallery();
+                    showNotification('Gallery is empty - admin can upload images', 'info');
+                });
         }
 
         function saveGalleryImages() {
-            const galleryData = JSON.stringify(galleryImages);
-            
-            // Save to multiple locations for redundancy
-            const storageKeys = ['galleryImages', 'spoolin_gallery_backup', 'spoolin_gallery_persistent'];
-            
-            storageKeys.forEach(key => {
-                try {
-                    localStorage.setItem(key, galleryData);
-                } catch (error) {
-                    console.warn(`Failed to save to ${key}:`, error);
-                }
-            });
-            
-            // Also save with timestamp for additional backup
-            const timestamp = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-            try {
-                localStorage.setItem(`spoolin_gallery_${timestamp}`, galleryData);
-            } catch (error) {
-                console.warn('Failed to save timestamped backup:', error);
-            }
-            
-            console.log('Gallery saved to multiple storage locations');
-        }
-
-        // Convert file to base64 for permanent storage
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
-
-        // Export gallery data
-        function exportGallery() {
-            if (galleryImages.length === 0) {
-                showNotification('No images to export', 'info');
-                return;
-            }
-            
-            const exportData = {
+            // Create updated gallery manifest
+            const manifest = {
                 version: '1.0',
-                exportDate: new Date().toISOString(),
+                lastUpdated: new Date().toISOString(),
                 totalImages: galleryImages.length,
+                deploymentInfo: {
+                    platform: 'GitHub Pages',
+                    repoOwner: GITHUB_CONFIG.repoOwner,
+                    repoName: GITHUB_CONFIG.repoName,
+                    branch: GITHUB_CONFIG.branch
+                },
                 images: galleryImages
             };
             
-            const dataStr = JSON.stringify(exportData, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            // Auto-download the updated manifest
+            const manifestContent = JSON.stringify(manifest, null, 2);
+            const manifestBlob = new Blob([manifestContent], { type: 'application/json' });
+            const manifestUrl = URL.createObjectURL(manifestBlob);
             
             const link = document.createElement('a');
-            link.href = URL.createObjectURL(dataBlob);
-            link.download = `spoolin-gallery-backup-${new Date().toISOString().split('T')[0]}.json`;
+            link.href = manifestUrl;
+            link.download = 'gallery-manifest.json';
+            link.style.display = 'none';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             
-            showNotification(`Gallery exported: ${galleryImages.length} images`, 'success');
+            console.log('Updated gallery manifest downloaded');
+            showGitHubInstructions();
+            
+            return Promise.resolve();
         }
 
-        // Import gallery data
-        function importGallery() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            input.onchange = function(event) {
-                const file = event.target.files[0];
-                if (!file) return;
-                
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const importData = JSON.parse(e.target.result);
-                        
-                        if (!importData.images || !Array.isArray(importData.images)) {
-                            throw new Error('Invalid gallery backup file');
-                        }
-                        
-                        const currentCount = galleryImages.length;
-                        const importCount = importData.images.length;
-                        
-                        if (currentCount > 0) {
-                            if (confirm(`You have ${currentCount} images in the gallery.\n\nImporting ${importCount} images from backup.\n\nChoose:\nOK = Add to existing gallery\nCancel = Replace entire gallery`)) {
-                                // Add to existing
-                                galleryImages = [...galleryImages, ...importData.images];
-                            } else {
-                                // Replace entirely
-                                galleryImages = importData.images;
-                            }
-                        } else {
-                            galleryImages = importData.images;
-                        }
-                        
-                        saveGalleryImages();
-                        renderGallery();
-                        showNotification(`Gallery imported: ${importData.images.length} images`, 'success');
-                        
-                    } catch (error) {
-                        console.error('Import error:', error);
-                        showNotification('Failed to import gallery backup', 'error');
-                    }
-                };
-                reader.readAsText(file);
-            };
-            input.click();
+        function showGitHubInstructions() {
+            const timestamp = Date.now();
+            const instructions = `
+                <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: var(--border-radius); padding: 20px; margin: 20px 0;">
+                    <h4 style="color: #3b82f6; margin-bottom: 16px;">
+                        <i class="fab fa-github"></i> GitHub Pages Update Required
+                    </h4>
+                    <p style="color: var(--text-secondary); margin-bottom: 16px;">
+                        To make images visible to all users on GitHub Pages:
+                    </p>
+                    <ol style="color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6;">
+                        <li>The updated <code>gallery-manifest.json</code> has been downloaded</li>
+                        <li>Add your image files to: <code>assets/images/gallery/</code></li>
+                        <li>Replace the <code>gallery-manifest.json</code> in your repository root</li>
+                        <li>Commit and push changes to GitHub</li>
+                        <li>Images will be live on GitHub Pages in 1-2 minutes!</li>
+                    </ol>
+                    <div style="background: rgba(59, 130, 246, 0.1); padding: 12px; border-radius: 8px; margin-top: 16px;">
+                        <strong style="color: #3b82f6;">Repository Structure:</strong>
+                        <pre style="color: var(--text-secondary); margin: 8px 0; font-family: monospace; font-size: 13px;">
+/
+├── gallery-manifest.json          (replace this file)
+├── assets/images/gallery/         (add image files here)
+│   ├── image1-${timestamp}-0.jpg
+│   ├── image2-${timestamp}-1.jpg
+│   └── ...
+└── gallery.html</pre>
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: 16px;">
+                        <button onclick="showImageFiles()" class="btn-secondary-modern">
+                            <i class="fas fa-images"></i> Show Image Files
+                        </button>
+                        <a href="https://github.com/${GITHUB_CONFIG.repoOwner}/${GITHUB_CONFIG.repoName}" target="_blank" class="btn-primary-modern">
+                            <i class="fab fa-github"></i> Open Repository
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            // Add instructions to admin panel
+            const adminPanel = document.getElementById('adminPanel');
+            let instructionsDiv = document.getElementById('githubInstructions');
+            
+            if (!instructionsDiv) {
+                instructionsDiv = document.createElement('div');
+                instructionsDiv.id = 'githubInstructions';
+                adminPanel.appendChild(instructionsDiv);
+            }
+            
+            instructionsDiv.innerHTML = instructions;
+        }
+
+        function showImageFiles() {
+            const imageFiles = galleryImages.map(img => img.filename).join('\n');
+            
+            const textarea = document.createElement('textarea');
+            textarea.value = imageFiles;
+            textarea.style.width = '100%';
+            textarea.style.height = '200px';
+            textarea.style.background = 'var(--secondary-color)';
+            textarea.style.color = 'var(--text-primary)';
+            textarea.style.border = '1px solid var(--border-color)';
+            textarea.style.borderRadius = 'var(--border-radius)';
+            textarea.style.padding = '12px';
+            textarea.style.fontFamily = 'monospace';
+            textarea.readonly = true;
+            
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.right = '0';
+            modal.style.bottom = '0';
+            modal.style.background = 'rgba(0,0,0,0.9)';
+            modal.style.zIndex = '10000';
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            modal.style.padding = '20px';
+            
+            const content = document.createElement('div');
+            content.style.background = 'var(--secondary-color)';
+            content.style.padding = '20px';
+            content.style.borderRadius = 'var(--border-radius)';
+            content.style.maxWidth = '600px';
+            content.style.width = '100%';
+            
+            content.innerHTML = `
+                <h3 style="color: var(--text-primary); margin-bottom: 16px;">Image Files to Upload</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 16px;">
+                    Upload these files to: <code style="background: var(--glass-bg); padding: 2px 6px; border-radius: 4px;">assets/images/gallery/</code>
+                </p>
+            `;
+            
+            content.appendChild(textarea);
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '<i class="fas fa-times"></i> Close';
+            closeBtn.className = 'btn-secondary-modern';
+            closeBtn.style.marginTop = '16px';
+            closeBtn.onclick = () => document.body.removeChild(modal);
+            
+            content.appendChild(closeBtn);
+            modal.appendChild(content);
+            document.body.appendChild(modal);
         }
 
         function updateGalleryStatus() {
@@ -1347,18 +1376,14 @@
             
             const totalImages = galleryImages.length;
             const categories = [...new Set(galleryImages.map(img => img.category))];
-            const permanentImages = galleryImages.filter(img => img.isPermanent).length;
             
             if (totalImages === 0) {
                 statusElement.innerHTML = '<span style="color: var(--text-muted);">No images uploaded</span>';
             } else {
-                const storageInfo = permanentImages > 0 ? 
-                    `<span style="color: var(--success-color); margin-left: 8px;"><i class="fas fa-shield-alt"></i> ${permanentImages} cache-resistant</span>` : '';
-                
                 statusElement.innerHTML = `
                     <span style="color: var(--primary-color);">${totalImages} image${totalImages > 1 ? 's' : ''}</span> 
                     across ${categories.length} categor${categories.length > 1 ? 'ies' : 'y'}
-                    ${storageInfo}
+                    <span style="color: var(--success-color); margin-left: 8px;"><i class="fas fa-globe"></i> Public Gallery</span>
                 `;
             }
         }

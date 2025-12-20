@@ -255,3 +255,6 @@ Events can be written by authenticated users and read by admins only. See `fires
 2. Archive old events to reduce collection size
 3. Use Firebase Analytics (GA4) for standard reports instead of Firestore queries
 
+
+
+

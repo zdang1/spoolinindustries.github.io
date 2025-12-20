@@ -2035,9 +2035,6 @@
         // Track quote request start when wizard is first shown
         let quoteRequestStarted = false;
         function trackQuoteRequestStart() {
-            // #region agent log
-            fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.html:2037',message:'trackQuoteRequestStart called',data:{quoteRequestStarted,hasAnalytics:!!window.analytics,hasFirebaseDb:!!window.firebaseDb,hasFirebase:typeof firebase !== 'undefined'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'H2'})}).catch(()=>{});
-            // #endregion
             if (!quoteRequestStarted && window.analytics) {
                 quoteRequestStarted = true;
                 window.analytics.trackEvent('quote_request_start', {});
@@ -4010,27 +4007,55 @@
         // Fall back to Firestore users collection
         if (!db) {
           console.log('checkIsAdmin: No db instance');
+          // #region agent log
+          fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.html:3948',message:'No db instance available',data:{uid:user.uid},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'H3'})}).catch(()=>{});
+          // #endregion
           return false;
         }
         const docPath = `users/${user.uid}`;
+        // #region agent log
+        fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.html:3952',message:'Attempting to read Firestore document',data:{docPath,uid:user.uid,email:user.email},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'H2'})}).catch(()=>{});
+        // #endregion
         const userDoc = await db.collection('users').doc(user.uid).get();
         console.log('checkIsAdmin: Firestore user doc exists:', userDoc.exists);
+        // #region agent log
+        fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.html:3954',message:'Document read result',data:{docPath,exists:userDoc.exists,uid:user.uid,email:user.email,checkedCollection:'users'},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'H2'})}).catch(()=>{});
+        // #endregion
+        
         // If document doesn't exist, try to find it by email in users collection
         if (!userDoc.exists && user.email) {
+          // #region agent log
+          fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.html:3957',message:'Document not found, searching by email',data:{email:user.email,uid:user.uid},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'H2'})}).catch(()=>{});
+          // #endregion
           try {
             const emailQuery = await db.collection('users').where('email', '==', user.email).limit(1).get();
+            // #region agent log
+            fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.html:3961',message:'Email query result',data:{email:user.email,foundDocs:emailQuery.size,docIds:emailQuery.docs.map(d=>d.id)},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'H2'})}).catch(()=>{});
+            // #endregion
             if (!emailQuery.empty) {
               const foundDoc = emailQuery.docs[0];
               console.log('checkIsAdmin: Found user document by email with different ID:', foundDoc.id);
+              // #region agent log
+              fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.html:3965',message:'Found document with different ID',data:{expectedId:user.uid,actualId:foundDoc.id,docData:foundDoc.data()},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'H2'})}).catch(()=>{});
+              // #endregion
             }
           } catch (err) {
+            // #region agent log
+            fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.html:3969',message:'Email query failed',data:{error:err.message,email:user.email},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'H2'})}).catch(()=>{});
+            // #endregion
           }
         }
         
         if (userDoc.exists) {
           const userData = userDoc.data();
           console.log('checkIsAdmin: User data:', userData);
+          // #region agent log
+          fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.html:3956',message:'Firestore document data retrieved',data:{docPath,allFields:Object.keys(userData),roleValue:userData.role,roleType:typeof userData.role,fullData:userData,uid:user.uid},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'H1'})}).catch(()=>{});
+          // #endregion
           const roleComparison = userData.role === 'admin';
+          // #region agent log
+          fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.html:3958',message:'Role comparison result',data:{docPath,roleValue:userData.role,roleType:typeof userData.role,comparison:'admin',result:roleComparison,uid:user.uid},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'H1'})}).catch(()=>{});
+          // #endregion
             const isAdminFromFirestore = roleComparison;
           console.log('checkIsAdmin: Is admin from Firestore:', isAdminFromFirestore);
           return isAdminFromFirestore;
@@ -4039,6 +4064,10 @@
         // Document doesn't exist - DO NOT auto-create admin documents
         // This was causing security issues. Admin documents must be created manually.
         console.log('checkIsAdmin: Document not found for user:', user.email);
+        // #region agent log
+        fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.html:3990',message:'Document missing - NOT auto-creating (security)',data:{uid:user.uid,email:user.email},timestamp:Date.now(),sessionId:'debug-session',runId:'run5',hypothesisId:'H8'})}).catch(()=>{});
+        // #endregion
+        
         console.log('checkIsAdmin: User is not admin');
         return false;
       } catch (error) {
@@ -4074,6 +4103,10 @@
           // Check if user is admin before showing button
           const isAdmin = await checkIsAdmin();
           console.log('initAuthStateListener: User admin status:', isAdmin, 'for user:', user.email);
+          // #region agent log
+          fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.html:4077',message:'Admin check completed in auth listener',data:{isAdmin,userEmail:user.email,uid:user.uid},timestamp:Date.now(),sessionId:'debug-session',runId:'run5',hypothesisId:'H8'})}).catch(()=>{});
+          // #endregion
+          
           if (adminButton) {
             // Force inline style with !important - only show if admin
             if (isAdmin) {
@@ -4083,16 +4116,26 @@
             }
             const displayValue = isAdmin ? 'flex' : 'none';
             console.log('initAuthStateListener: Admin button display set to:', displayValue, 'for user:', user.email);
+            // #region agent log
+            fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.html:4093',message:'Admin button display updated',data:{isAdmin,displayValue,buttonExists:!!adminButton,buttonId:adminButton.id,uid:user.uid,userEmail:user.email},timestamp:Date.now(),sessionId:'debug-session',runId:'run5',hypothesisId:'H8'})}).catch(()=>{});
+            // #endregion
+            
             // Double-check: if not admin, ensure button is hidden
             if (!isAdmin) {
               const currentStyle = adminButton.getAttribute('style');
               if (!currentStyle || !currentStyle.includes('none')) {
                 console.warn('initAuthStateListener: WARNING - Non-admin user, forcing button to hidden for:', user.email);
                 adminButton.setAttribute('style', 'display: none !important;');
+                // #region agent log
+                fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.html:4100',message:'Forced button hidden for non-admin',data:{isAdmin,userEmail:user.email,uid:user.uid},timestamp:Date.now(),sessionId:'debug-session',runId:'run5',hypothesisId:'H8'})}).catch(()=>{});
+                // #endregion
               }
             }
           } else {
             console.log('initAuthStateListener: Admin button element not found');
+            // #region agent log
+            fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.html:3977',message:'Admin button element not found',data:{isAdmin,uid:user.uid},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'H6'})}).catch(()=>{});
+            // #endregion
           }
           if (userIconLink) {
             userIconLink.title = user.email || 'Account';

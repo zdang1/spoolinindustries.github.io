@@ -260,3 +260,6 @@ function showAlert(message, type = 'info') {
 window.saveStripeConfig = saveStripeConfig;
 window.testStripeConnection = testStripeConnection;
 
+
+
+

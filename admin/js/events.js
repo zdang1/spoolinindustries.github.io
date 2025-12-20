@@ -701,3 +701,6 @@ window.clearFilters = clearFilters;
 window.changePage = changePage;
 window.exportEvents = exportEvents;
 
+
+
+

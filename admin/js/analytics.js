@@ -73,9 +73,15 @@ function trackGA4Event(eventName, params = {}) {
  * @returns {Promise<void>}
  */
 async function trackFirestoreEvent(eventName, params = {}) {
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'analytics.js:75',message:'trackFirestoreEvent called',data:{eventName,hasFirebaseDb:!!window.firebaseDb,hasFirebase:typeof firebase !== 'undefined'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'H2'})}).catch(()=>{});
+  // #endregion
   try {
     if (!window.firebaseDb) {
       console.warn('Firestore not initialized. Event not stored:', eventName);
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'analytics.js:78',message:'Firestore not initialized - event not stored',data:{eventName},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'H2'})}).catch(()=>{});
+      // #endregion
       return;
     }
 

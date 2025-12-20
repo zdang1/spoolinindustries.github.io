@@ -12,7 +12,8 @@ const ACTIVE_VISITORS_COLLECTION = 'activeVisitors';
 // State
 let heartbeatTimer = null;
 let isTracking = false;
-let sessionId = null;
+// Use window.analytics.sessionId instead of declaring our own to avoid conflict with analytics.js
+// let sessionId = null; // REMOVED: conflict with analytics.js
 let visitorDocRef = null;
 let isPageVisible = true;
 
@@ -21,27 +22,34 @@ let isPageVisible = true;
  * Reuses sessionId from analytics.js if available
  */
 function getSessionId() {
-  if (sessionId) {
-    return sessionId;
-  }
-
-  // Try to get from analytics.js if available
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'visitor-tracking.js:23',message:'getSessionId called',data:{hasAnalytics:!!window.analytics,hasSessionId:!!(window.analytics?.sessionId)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'H1'})}).catch(()=>{});
+  // #endregion
+  
+  // Try to get from analytics.js if available (preferred source)
   if (window.analytics && window.analytics.sessionId) {
-    sessionId = window.analytics.sessionId;
-    return sessionId;
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'visitor-tracking.js:29',message:'Using sessionId from analytics.js',data:{sessionId:window.analytics.sessionId},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'H1'})}).catch(()=>{});
+    // #endregion
+    return window.analytics.sessionId;
   }
 
   // Try to get from sessionStorage
   const storedSessionId = sessionStorage.getItem('analytics_session_id');
   if (storedSessionId) {
-    sessionId = storedSessionId;
-    return sessionId;
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'visitor-tracking.js:36',message:'Using sessionId from sessionStorage',data:{sessionId:storedSessionId},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'H1'})}).catch(()=>{});
+    // #endregion
+    return storedSessionId;
   }
 
-  // Generate new session ID
-  sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  sessionStorage.setItem('analytics_session_id', sessionId);
-  return sessionId;
+  // Generate new session ID (should not normally happen if analytics.js loaded first)
+  const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  sessionStorage.setItem('analytics_session_id', newSessionId);
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'visitor-tracking.js:43',message:'Generated new sessionId',data:{sessionId:newSessionId},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'H1'})}).catch(()=>{});
+  // #endregion
+  return newSessionId;
 }
 
 /**

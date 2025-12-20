@@ -3119,7 +3119,9 @@
             .get();
         } catch (indexError) {
           // Fallback: query without orderBy if index doesn't exist yet
-          console.warn('Index not found, using fallback query:', indexError);
+          // Note: Create the index at https://console.firebase.google.com to improve performance
+          // The fallback query works but won't be sorted by creation date
+          console.log('Using fallback query (index not yet created):', indexError.message);
           snapshot = await db.collection('products')
             .where('featured', '==', true)
             .where('status', '==', 'active')
@@ -4701,7 +4703,6 @@
       font-weight: 600;
       font-size: 16px;
       box-shadow: 0 4px 20px rgba(238, 37, 36, 0.4);
-      z-index: 9999;
       transition: all 0.3s ease;
     }
 

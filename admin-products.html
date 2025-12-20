@@ -419,6 +419,11 @@
     
     <!-- Additional Scripts -->
     <script>
+        // Check authentication
+        document.addEventListener('DOMContentLoaded', async () => {
+            await window.firebaseHelpers.requireAuth();
+        });
+        
         // Mobile menu toggle
         function toggleMobileMenu() {
             const sidebar = document.getElementById('admin-sidebar');

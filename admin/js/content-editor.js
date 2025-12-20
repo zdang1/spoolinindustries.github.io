@@ -617,6 +617,7 @@ window.contentEditor = {
   init: initContentEditor,
   toggle: toggleEditMode,
   enter: enterEditMode,
-  exit: exitEditMode
+  exit: exitEditMode,
+  isEditMode: () => isEditMode
 };
 

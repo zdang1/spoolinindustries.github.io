@@ -4078,6 +4078,17 @@
             // Force inline style with !important - only show if admin
             if (isAdmin) {
               adminButton.setAttribute('style', 'display: flex !important;');
+              // Add click handler to toggle content editing
+              adminButton.onclick = function(e) {
+                e.preventDefault();
+                if (window.contentEditor && window.contentEditor.toggle) {
+                  window.contentEditor.toggle();
+                  // Update button text to show current mode
+                  const editMode = window.contentEditor.isEditMode;
+                  adminButton.querySelector('span').textContent = editMode ? 'Exit Edit' : 'Admin';
+                  adminButton.classList.toggle('edit-mode-active', editMode);
+                }
+              };
             } else {
               adminButton.setAttribute('style', 'display: none !important;');
             }
@@ -4668,6 +4679,15 @@
       box-shadow: 0 6px 25px rgba(238, 37, 36, 0.5);
       text-decoration: none;
       color: white;
+    }
+    
+    .admin-float-button.edit-mode-active {
+      background: #ff4444;
+      box-shadow: 0 4px 20px rgba(255, 68, 68, 0.6);
+    }
+    
+    .admin-float-button.edit-mode-active:hover {
+      box-shadow: 0 6px 25px rgba(255, 68, 68, 0.7);
     }
 
     .admin-float-button i {

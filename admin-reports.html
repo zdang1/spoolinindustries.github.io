@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Admin Panel | Spoolin Industries</title>
+    <link rel="stylesheet" href="admin/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="admin-sidebar-logo">
+                <img src="assets/images/e564d451be837b57-1192x710.png-108x64.png" alt="Spoolin Industries">
+            </div>
+            <nav>
+                <ul class="admin-nav">
+                    <li class="admin-nav-item">
+                        <a href="admin-dashboard.html" class="admin-nav-link">
+                            <i class="fas fa-home"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    
+                    <li class="admin-nav-section">Sales Pipeline</li>
+                    <li class="admin-nav-item">
+                        <a href="admin-leads.html" class="admin-nav-link">
+                            <i class="fas fa-user-plus"></i>
+                            Leads & Enquiries
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-quotes.html" class="admin-nav-link">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            Quotes
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-invoices.html" class="admin-nav-link">
+                            <i class="fas fa-receipt"></i>
+                            Invoices & Payments
+                        </a>
+                    </li>
+                    
+                    <li class="admin-nav-divider"></li>
+                    <li class="admin-nav-section">Production</li>
+                    <li class="admin-nav-item">
+                        <a href="admin-jobs.html" class="admin-nav-link">
+                            <i class="fas fa-briefcase"></i>
+                            Jobs
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-schedule.html" class="admin-nav-link">
+                            <i class="fas fa-calendar-alt"></i>
+                            Schedule
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-time.html" class="admin-nav-link">
+                            <i class="fas fa-clock"></i>
+                            Time Tracking
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-qa.html" class="admin-nav-link">
+                            <i class="fas fa-clipboard-check"></i>
+                            QA / Checklists
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-warranty.html" class="admin-nav-link">
+                            <i class="fas fa-shield-alt"></i>
+                            Warranty / Aftercare
+                        </a>
+                    </li>
+                    
+                    <li class="admin-nav-divider"></li>
+                    <li class="admin-nav-section">Customers</li>
+                    <li class="admin-nav-item">
+                        <a href="admin-customers.html" class="admin-nav-link">
+                            <i class="fas fa-users"></i>
+                            Customers
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-vehicles.html" class="admin-nav-link">
+                            <i class="fas fa-car"></i>
+                            Vehicles
+                        </a>
+                    </li>
+                    
+                    <li class="admin-nav-divider"></li>
+                    <li class="admin-nav-section">Inventory & Purchasing</li>
+                    <li class="admin-nav-item">
+                        <a href="admin-inventory.html" class="admin-nav-link">
+                            <i class="fas fa-warehouse"></i>
+                            Inventory
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-products.html" class="admin-nav-link">
+                            <i class="fas fa-box"></i>
+                            Products (Shop)
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-categories.html" class="admin-nav-link">
+                            <i class="fas fa-tags"></i>
+                            Categories
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-suppliers.html" class="admin-nav-link">
+                            <i class="fas fa-truck"></i>
+                            Suppliers
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-purchase-orders.html" class="admin-nav-link">
+                            <i class="fas fa-shopping-bag"></i>
+                            Purchase Orders
+                        </a>
+                    </li>
+                    
+                    <li class="admin-nav-divider"></li>
+                    <li class="admin-nav-section">Analytics</li>
+                    <li class="admin-nav-item">
+                        <a href="admin-reports.html" class="admin-nav-link active">
+                            <i class="fas fa-chart-bar"></i>
+                            Reports
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-events.html" class="admin-nav-link">
+                            <i class="fas fa-search"></i>
+                            Event Explorer
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-health.html" class="admin-nav-link">
+                            <i class="fas fa-heartbeat"></i>
+                            System Health
+                        </a>
+                    </li>
+                    
+                    <li class="admin-nav-divider"></li>
+                    <li class="admin-nav-section">Settings</li>
+                    <li class="admin-nav-item">
+                        <a href="admin-users.html" class="admin-nav-link">
+                            <i class="fas fa-user-shield"></i>
+                            Users & Roles
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-templates.html" class="admin-nav-link">
+                            <i class="fas fa-file-alt"></i>
+                            Templates
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-integrations.html" class="admin-nav-link">
+                            <i class="fas fa-plug"></i>
+                            Integrations
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-audit.html" class="admin-nav-link">
+                            <i class="fas fa-history"></i>
+                            Audit Log
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <div>
+                    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>Reports</h1>
+                </div>
+                <div class="admin-header-actions">
+                    <button class="btn btn-secondary btn-sm" onclick="signOut()">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </button>
+                </div>
+            </header>
+
+            <div class="admin-content">
+                <div class="page-header">
+                    <div>
+                        <h2>Analytics Dashboard</h2>
+                        <p style="color: var(--admin-text-muted); margin-top: 5px;">
+                            Comprehensive analytics and insights for your website and products.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Date Range Filter Panel -->
+                <div class="analytics-date-filter-panel">
+                    <div class="date-range-controls">
+                        <div class="date-range-slider-container">
+                            <label class="form-label">Date Range</label>
+                            <div class="date-range-slider-wrapper">
+                                <input type="range" id="date-range-slider" class="date-range-slider" min="7" max="365" value="30" step="1">
+                                <div class="date-display">
+                                    <span id="date-from-display">Last 30 days</span>
+                                    <span id="date-to-display">Today</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="date-picker-controls">
+                            <div class="form-group">
+                                <label class="form-label">From</label>
+                                <input type="date" id="date-from-picker" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">To</label>
+                                <input type="date" id="date-to-picker" class="form-control">
+                            </div>
+                        </div>
+                        <div class="quick-filter-buttons">
+                            <button class="btn btn-sm btn-secondary" onclick="setQuickDateRange(7)">7 days</button>
+                            <button class="btn btn-sm btn-secondary" onclick="setQuickDateRange(30)">30 days</button>
+                            <button class="btn btn-sm btn-secondary" onclick="setQuickDateRange(90)">90 days</button>
+                            <button class="btn btn-sm btn-secondary" onclick="setQuickDateRange(365)">1 year</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Metrics Cards -->
+                <div class="metrics-grid" id="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-eye"></i></div>
+                        <div class="metric-content">
+                            <h3>Total Page Views</h3>
+                            <div class="metric-value" id="metric-page-views">0</div>
+                            <div class="metric-change" id="metric-page-views-change">—</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-users"></i></div>
+                        <div class="metric-content">
+                            <h3>Unique Visitors</h3>
+                            <div class="metric-value" id="metric-unique-visitors">0</div>
+                            <div class="metric-change" id="metric-unique-visitors-change">—</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon live-indicator-icon">
+                            <i class="fas fa-circle"></i>
+                        </div>
+                        <div class="metric-content">
+                            <h3>Live Visitors</h3>
+                            <div class="metric-value" id="metric-live-visitors">0</div>
+                            <div class="metric-change" id="metric-live-visitors-change">Real-time</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-box"></i></div>
+                        <div class="metric-content">
+                            <h3>Products Viewed</h3>
+                            <div class="metric-value" id="metric-products-viewed">0</div>
+                            <div class="metric-change" id="metric-products-viewed-change">—</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-shopping-cart"></i></div>
+                        <div class="metric-content">
+                            <h3>Add to Cart</h3>
+                            <div class="metric-value" id="metric-add-to-cart">0</div>
+                            <div class="metric-change" id="metric-add-to-cart-change">—</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="metric-content">
+                            <h3>Purchases</h3>
+                            <div class="metric-value" id="metric-purchases">0</div>
+                            <div class="metric-change" id="metric-purchases-change">—</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-percentage"></i></div>
+                        <div class="metric-content">
+                            <h3>Conversion Rate</h3>
+                            <div class="metric-value" id="metric-conversion-rate">0%</div>
+                            <div class="metric-change" id="metric-conversion-rate-change">—</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Tabs -->
+                <div class="admin-tabs" style="margin-bottom: 20px;">
+                    <button class="admin-tab active" onclick="switchAnalyticsTab('overview')" id="tab-overview">
+                        <i class="fas fa-chart-line"></i> Overview
+                    </button>
+                    <button class="admin-tab" onclick="switchAnalyticsTab('products')" id="tab-products">
+                        <i class="fas fa-box"></i> Product Analytics
+                    </button>
+                    <button class="admin-tab" onclick="switchAnalyticsTab('user-activity')" id="tab-user-activity">
+                        <i class="fas fa-user-chart"></i> User Activity
+                    </button>
+                    <button class="admin-tab" onclick="switchAnalyticsTab('ecommerce')" id="tab-ecommerce">
+                        <i class="fas fa-funnel-dollar"></i> E-commerce Funnel
+                    </button>
+                </div>
+
+                <!-- Overview Tab -->
+                <div id="overview-tab-content" class="analytics-tab-content active">
+                    <div class="chart-container">
+                        <h3>Activity Timeline</h3>
+                        <canvas id="activity-timeline-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>User Activity Heatmap</h3>
+                        <div id="activity-heatmap-container">
+                            <canvas id="activity-heatmap"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Analytics Tab -->
+                <div id="products-tab-content" class="analytics-tab-content">
+                    <div class="chart-container">
+                        <h3>Most Viewed Products</h3>
+                        <canvas id="products-viewed-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Most Added to Wishlist</h3>
+                        <canvas id="wishlist-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Most Purchased Products</h3>
+                        <canvas id="purchased-products-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Product Performance Table</h3>
+                        <div class="admin-table-container">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Views</th>
+                                        <th>Wishlist Adds</th>
+                                        <th>Purchases</th>
+                                        <th>Conversion Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="product-performance-tbody">
+                                    <tr>
+                                        <td colspan="5" class="text-center" style="color: var(--admin-text-muted);">
+                                            Loading product data...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Activity Tab -->
+                <div id="user-activity-tab-content" class="analytics-tab-content">
+                    <div class="chart-container">
+                        <h3>Page Views Heatmap</h3>
+                        <div id="page-views-heatmap-container">
+                            <canvas id="page-views-heatmap"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <h3>User Journey Flow</h3>
+                        <div id="user-journey-chart-container">
+                            <canvas id="user-journey-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- E-commerce Funnel Tab -->
+                <div id="ecommerce-tab-content" class="analytics-tab-content">
+                    <div class="chart-container">
+                        <h3>E-commerce Conversion Funnel</h3>
+                        <canvas id="ecommerce-funnel-chart"></canvas>
+                    </div>
+                    <div class="funnel-stats-container">
+                        <div class="funnel-step">
+                            <span class="step-label">Product Views</span>
+                            <span class="step-value" id="funnel-views">0</span>
+                        </div>
+                        <div class="funnel-arrow">→</div>
+                        <div class="funnel-step">
+                            <span class="step-label">Add to Cart</span>
+                            <span class="step-value" id="funnel-cart">0</span>
+                            <span class="step-percentage" id="funnel-cart-pct">0%</span>
+                        </div>
+                        <div class="funnel-arrow">→</div>
+                        <div class="funnel-step">
+                            <span class="step-label">Checkout Started</span>
+                            <span class="step-value" id="funnel-checkout">0</span>
+                            <span class="step-percentage" id="funnel-checkout-pct">0%</span>
+                        </div>
+                        <div class="funnel-arrow">→</div>
+                        <div class="funnel-step">
+                            <span class="step-label">Purchases</span>
+                            <span class="step-value" id="funnel-purchase">0</span>
+                            <span class="step-percentage" id="funnel-purchase-pct">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase SDK - Compat version for easier usage -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    
+    <!-- Firebase Config -->
+    <script src="admin/js/firebase-config.js"></script>
+    
+    <!-- Navigation Collapse/Expand -->
+    <script src="admin/js/navigation.js"></script>
+    
+    <!-- Chart.js for Visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Reports/Analytics Logic -->
+    <script src="admin/js/reports.js"></script>
+    
+    <!-- Scripts -->
+    <script>
+        // #region agent log
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const metricsGrid = document.getElementById('metrics-grid');
+                const allCards = metricsGrid ? Array.from(metricsGrid.querySelectorAll('.metric-card')) : [];
+                const cardTexts = allCards.map((card, idx) => {
+                    const h3 = card.querySelector('h3');
+                    const rect = card.getBoundingClientRect();
+                    return `Card${idx+1}: ${h3 ? h3.textContent : 'no title'} (visible: ${rect.width > 0 && rect.height > 0})`;
+                });
+                const liveCard = document.getElementById('metric-live-visitors');
+                const liveCardParent = liveCard ? liveCard.closest('.metric-card') : null;
+                const gridStyles = metricsGrid ? window.getComputedStyle(metricsGrid) : null;
+                const liveCardRect = liveCardParent ? liveCardParent.getBoundingClientRect() : null;
+                fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'admin-reports.html:inline',message:'DOMContentLoaded HTML check',data:{totalCards:allCards.length,cardTitles:cardTexts.join(' | '),liveCardExists:!!liveCard,liveCardParentExists:!!liveCardParent,gridOverflow:gridStyles?.overflow,gridHeight:gridStyles?.height,gridMaxHeight:gridStyles?.maxHeight,liveCardTop:liveCardRect?.top,liveCardLeft:liveCardRect?.left,liveCardWidth:liveCardRect?.width,liveCardHeight:liveCardRect?.height,gridRectTop:metricsGrid?metricsGrid.getBoundingClientRect().top:null,gridRectHeight:metricsGrid?metricsGrid.getBoundingClientRect().height:null},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+            }, 100);
+        });
+        // #endregion
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            await window.firebaseHelpers.requireAuth();
+        });
+
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('admin-sidebar');
+            sidebar.classList.toggle('mobile-open');
+        }
+
+        async function signOut() {
+            if (confirm('Are you sure you want to sign out?')) {
+                try {
+                    await window.firebaseHelpers.signOut();
+                    window.location.href = 'admin-login.html';
+                } catch (error) {
+                    console.error('Sign out error:', error);
+                    alert('Error signing out. Please try again.');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html  >
+<head>
+  
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <link rel="shortcut icon" href="assets/images/e564d451be837b57-1192x710.png-108x64.png" type="image/x-icon">
+  <meta name="description" content="Manage your Spoolin Industries account settings, orders, and wishlist.">
+  
+  
+  <title>My Account - Spoolin Industries</title>
+  <link rel="stylesheet" href="assets/web/assets/mobirise-icons2/mobirise2.css">
+  <link rel="stylesheet" href="assets/web/assets/mobirise-icons/mobirise-icons.css">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/dropdown/css/style.css">
+  <link rel="stylesheet" href="assets/socicon/css/styles.css">
+  <link rel="stylesheet" href="assets/theme/css/style.css">
+
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Bebas+Neue:400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bebas+Neue:400&display=swap"></noscript>
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Exo+2:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Exo+2:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap"></noscript>
+  <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=XTd1Og"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=XTd1Og" type="text/css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+        :root {
+            --primary-color: #ee2524;
+            --primary-light: #ff4040;
+            --primary-dark: #cb2723;
+            --secondary-color: #1a1a1a;
+            --accent-color: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #888888;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --border-radius: 12px;
+            --border-radius-lg: 16px;
+            --border-radius-xl: 20px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: #121212;
+            color: var(--text-primary);
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        .account-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 20px 80px;
+        }
+
+        .account-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .account-header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .account-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .account-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 40px;
+            background: var(--glass-bg);
+            padding: 4px;
+            border-radius: var(--border-radius);
+            flex-wrap: wrap;
+        }
+
+        .account-tab {
+            flex: 1;
+            min-width: 150px;
+            padding: 14px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .account-tab.active {
+            background: var(--primary-color);
+            color: var(--text-primary);
+        }
+
+        .account-tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .account-content {
+            display: none;
+        }
+
+        .account-content.active {
+            display: block;
+        }
+
+        .account-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .account-card h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--accent-color);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(238, 37, 36, 0.1);
+        }
+
+        .form-group input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: var(--glass-bg);
+            border-color: var(--primary-color);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 24px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            margin-bottom: 32px;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            font-weight: 700;
+        }
+
+        .user-details h3 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .user-details p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .account-container {
+                padding: 100px 16px 60px;
+            }
+
+            .account-header h1 {
+                font-size: 2rem;
+            }
+
+            .account-tabs {
+                flex-direction: column;
+            }
+
+            .account-tab {
+                width: 100%;
+            }
+
+            .user-info {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation (same as shop.html) -->
+  <section data-bs-version="5.1" class="menu menu01 neuralm5 cid-uGKLfvQrfz" once="menu" id="menu01-t">
+    
+
+    <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
+        <div class="content-wrap container-fluid">
+            <div class="navbar-brand">
+                <span class="navbar-logo">
+                    <a href="index.html#aheader1-6">
+                        <img src="assets/images/e564d451be837b57-1192x710.png-108x64.png" alt="Spoolin Industries Logo" style="height: 5.4rem;">
+                    </a>
+                </span>
+                
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbarSupportedContent" data-bs-target="#navbarSupportedContent" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true"><li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#aheader1-6"><strong>HOME</strong></a></li>
+                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#custom-html-21"><strong>SERVICES</strong></a>
+                    </li><li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="shop.html"><strong>SHOP</strong></a>
+                    </li><li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#features07-1c"><strong>TEAM</strong></a>
+                    </li><li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#list01-15"><strong>FAQ</strong></a></li><li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#contacts01-14"><strong>CONTACT US</strong></a></li>
+                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#slider1-1z"><strong>OUR WORK</strong><strong><br></strong></a></li></ul>
+                <div class="icons-menu">
+                    <a class="iconfont-wrapper" href="https://www.facebook.com/people/Spoolin-Industries/61557442715086/" target="_blank">
+                        <span class="p-2 mbr-iconfont socicon-facebook socicon"></span>
+                    </a>
+                    <a class="iconfont-wrapper" href="https://www.tiktok.com/@spoolinindustries" target="_blank">
+                        <span class="p-2 mbr-iconfont socicon-tiktok socicon"></span>
+                    </a>
+                    <div class="cart-badge-container">
+                        <a class="iconfont-wrapper" href="shop.html" title="Shopping Cart">
+                            <span class="p-2 mbr-iconfont mobi-mbri-shopping-cart mobi-mbri"></span>
+                            <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+                        </a>
+                    </div>
+                    <div class="user-menu-container">
+                        <a class="iconfont-wrapper" href="#" onclick="event.preventDefault(); handleUserIconClick(event);" title="Account" id="userIconLink">
+                            <span class="p-2 mbr-iconfont mobi-mbri-user mobi-mbri"></span>
+                        </a>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="my-account.html" class="user-dropdown-item">
+                                <i class="mobi-mbri mobi-mbri-user mobi-mbri"></i>
+                                <span>My Account</span>
+                            </a>
+                            <button class="user-dropdown-item" onclick="handleSignOut()">
+                                <i class="mobi-mbri mobi-mbri-logout mobi-mbri"></i>
+                                <span>Sign Out</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="navbar-buttons mbr-section-btn">
+                    <a class="btn btn-white-outline display-4" href="index.html#aform1-x">Book a Build</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</section>
+
+    <!-- Account Content -->
+    <div class="account-container">
+        <div class="account-header">
+            <h1>My Account</h1>
+            <p>Manage your account settings and preferences</p>
+        </div>
+
+        <div id="loadingState" style="text-align: center; padding: 60px 20px;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p style="margin-top: 20px; color: var(--text-secondary);">Loading account information...</p>
+        </div>
+
+        <div id="accountContent" style="display: none;">
+            <div class="user-info" id="userInfo">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <div class="user-details">
+                    <h3 id="userName">User</h3>
+                    <p id="userEmail">Loading...</p>
+                </div>
+            </div>
+
+            <div class="account-tabs">
+                <button class="account-tab active" onclick="switchTab('profile')">
+                    <i class="mobi-mbri mobi-mbri-user mobi-mbri"></i>
+                    Profile
+                </button>
+                <button class="account-tab" onclick="switchTab('orders')">
+                    <i class="mobi-mbri mobi-mbri-shopping-cart mobi-mbri"></i>
+                    Orders
+                </button>
+                <button class="account-tab" onclick="switchTab('wishlist')">
+                    <i class="mobi-mbri mobi-mbri-hearth mobi-mbri"></i>
+                    Wishlist
+                </button>
+            </div>
+
+            <!-- Profile Tab -->
+            <div class="account-content active" id="profileTab">
+                <div class="account-card">
+                    <h2>Profile Information</h2>
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label for="displayName">Display Name</label>
+                            <input type="text" id="displayName" placeholder="Your name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" placeholder="Your phone number">
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="mobi-mbri mobi-mbri-save mobi-mbri"></i>
+                            Save Changes
+                        </button>
+                    </form>
+                </div>
+
+                <div class="account-card">
+                    <h2>Change Password</h2>
+                    <form id="passwordForm">
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword" placeholder="Enter current password">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" placeholder="Enter new password" minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm New Password</label>
+                            <input type="password" id="confirmPassword" placeholder="Confirm new password">
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="mobi-mbri mobi-mbri-lock mobi-mbri"></i>
+                            Update Password
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Orders Tab -->
+            <div class="account-content" id="ordersTab">
+                <div class="account-card">
+                    <h2>Order History</h2>
+                    <div class="empty-state">
+                        <i class="mobi-mbri mobi-mbri-shopping-cart mobi-mbri"></i>
+                        <h3>No orders yet</h3>
+                        <p>When you place an order, it will appear here.</p>
+                        <a href="shop.html" class="btn-primary" style="margin-top: 20px; text-decoration: none;">
+                            <i class="mobi-mbri mobi-mbri-arrow-next mobi-mbri"></i>
+                            Start Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wishlist Tab -->
+            <div class="account-content" id="wishlistTab">
+                <div class="account-card">
+                    <h2>My Wishlist</h2>
+                    <div id="wishlistContent">
+                        <div class="empty-state">
+                            <i class="mobi-mbri mobi-mbri-hearth mobi-mbri"></i>
+                            <h3>Your wishlist is empty</h3>
+                            <p>Add products to your wishlist to save them for later.</p>
+                            <a href="shop.html" class="btn-primary" style="margin-top: 20px; text-decoration: none;">
+                                <i class="mobi-mbri mobi-mbri-arrow-next mobi-mbri"></i>
+                                Browse Products
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD4gAhmIfoP1qXSupDTxNDwXFSb6QfyzDA",
+            authDomain: "spoolin-industries.firebaseapp.com",
+            projectId: "spoolin-industries",
+            storageBucket: "spoolin-industries.firebasestorage.app",
+            messagingSenderId: "21817997808",
+            appId: "1:21817997808:web:e758b7c7750536e8f10535",
+            measurementId: "G-6SVL3HH0FH"
+        };
+
+        // Initialize Firebase
+        let app, auth, db;
+        try {
+            app = firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            db = firebase.firestore();
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+        }
+
+        // Check authentication
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                // Not logged in - redirect to home
+                window.location.href = 'index.html';
+            } else {
+                // Load user data
+                loadUserData(user);
+            }
+        });
+
+        function loadUserData(user) {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('accountContent').style.display = 'block';
+
+            // Set user info
+            const email = user.email || '';
+            const displayName = user.displayName || email.split('@')[0] || 'User';
+            const firstLetter = displayName.charAt(0).toUpperCase();
+
+            document.getElementById('userAvatar').textContent = firstLetter;
+            document.getElementById('userName').textContent = displayName;
+            document.getElementById('userEmail').textContent = email;
+            document.getElementById('email').value = email;
+            document.getElementById('displayName').value = displayName;
+        }
+
+        function switchTab(tab) {
+            // Update tabs
+            document.querySelectorAll('.account-tab').forEach(t => t.classList.remove('active'));
+            event.target.closest('.account-tab').classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.account-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(tab + 'Tab').classList.add('active');
+
+            // Load tab-specific data
+            if (tab === 'wishlist') {
+                loadWishlist();
+            }
+        }
+
+        function loadWishlist() {
+            try {
+                const wishlistData = localStorage.getItem('spoolin_wishlist');
+                const wishlist = wishlistData ? JSON.parse(wishlistData) : [];
+                
+                if (wishlist.length === 0) {
+                    return; // Already showing empty state
+                }
+
+                // Load products from Firestore
+                db.collection('products')
+                    .where('status', '==', 'active')
+                    .get()
+                    .then(snapshot => {
+                        const products = {};
+                        snapshot.forEach(doc => {
+                            products[doc.id] = { id: doc.id, ...doc.data() };
+                        });
+
+                        const wishlistProducts = wishlist
+                            .map(id => products[id])
+                            .filter(p => p);
+
+                        if (wishlistProducts.length === 0) {
+                            return; // Already showing empty state
+                        }
+
+                        // Render wishlist
+                        const container = document.getElementById('wishlistContent');
+                        container.innerHTML = wishlistProducts.map(product => {
+                            const primaryImage = product.images && product.images.length > 0
+                                ? product.images.find(img => img.isPrimary) || product.images[0]
+                                : null;
+                            const imageUrl = primaryImage ? primaryImage.url : '';
+
+                            return `
+                                <div style="display: flex; gap: 20px; padding: 20px; border-bottom: 1px solid var(--glass-border); align-items: center;">
+                                    <img src="${imageUrl}" alt="${product.name}" style="width: 100px; height: 100px; object-fit: cover; border-radius: var(--border-radius);">
+                                    <div style="flex: 1;">
+                                        <h3 style="margin-bottom: 8px;">${product.name}</h3>
+                                        <p style="color: var(--text-secondary); margin-bottom: 12px;">${product.description || ''}</p>
+                                        <div style="display: flex; gap: 12px; align-items: center;">
+                                            <span style="color: var(--primary-color); font-size: 1.25rem; font-weight: 700;">$${parseFloat(product.price || 0).toLocaleString()}</span>
+                                            <a href="shop.html" class="btn-secondary" style="text-decoration: none;">
+                                                View Product
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                    });
+            } catch (error) {
+                console.error('Error loading wishlist:', error);
+            }
+        }
+
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = auth.currentUser;
+            if (!user) return;
+
+            try {
+                // Update display name
+                await user.updateProfile({
+                    displayName: document.getElementById('displayName').value
+                });
+
+                // Update user info display
+                loadUserData(user);
+                showNotification('Profile updated successfully!', 'success');
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showNotification('Error updating profile. Please try again.', 'error');
+            }
+        });
+
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = auth.currentUser;
+            if (!user) return;
+
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                showNotification('New passwords do not match.', 'error');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showNotification('Password must be at least 6 characters.', 'error');
+                return;
+            }
+
+            try {
+                // Re-authenticate user
+                const credential = firebase.auth.EmailAuthProvider.credential(
+                    user.email,
+                    currentPassword
+                );
+                await user.reauthenticateWithCredential(credential);
+
+                // Update password
+                await user.updatePassword(newPassword);
+                showNotification('Password updated successfully!', 'success');
+                document.getElementById('passwordForm').reset();
+            } catch (error) {
+                console.error('Error updating password:', error);
+                let errorMessage = 'Error updating password. Please try again.';
+                if (error.code === 'auth/wrong-password') {
+                    errorMessage = 'Current password is incorrect.';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'Password is too weak.';
+                }
+                showNotification(errorMessage, 'error');
+            }
+        });
+
+        function handleUserIconClick(event) {
+            if (!auth) return;
+
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    const dropdown = document.getElementById('userDropdown');
+                    if (dropdown) {
+                        dropdown.classList.toggle('active');
+                    }
+                }
+            });
+        }
+
+        async function handleSignOut() {
+            try {
+                await auth.signOut();
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Sign out error:', error);
+                showNotification('Error signing out. Please try again.', 'error');
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const userMenuContainer = document.querySelector('.user-menu-container');
+            const dropdown = document.getElementById('userDropdown');
+            if (userMenuContainer && dropdown && !userMenuContainer.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            
+            let backgroundColor = '#ee2524';
+            if (type === 'success') backgroundColor = '#10b981';
+            else if (type === 'error') backgroundColor = '#ef4444';
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${backgroundColor};
+                color: white;
+                padding: 16px 24px;
+                border-radius: 12px;
+                z-index: 10000;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+                font-weight: 500;
+                max-width: 300px;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Cart badge
+        function updateCartBadge() {
+            try {
+                const cartData = localStorage.getItem('spoolin_cart');
+                if (!cartData) return;
+                const cart = JSON.parse(cartData);
+                const count = Object.values(cart).reduce((total, item) => total + (item.quantity || 0), 0);
+                const badge = document.getElementById('cartBadge');
+                if (badge) {
+                    if (count > 0) {
+                        badge.textContent = count;
+                        badge.style.display = 'flex';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating cart badge:', error);
+            }
+        }
+
+        updateCartBadge();
+    </script>
+
+    <style>
+        .user-menu-container {
+            position: relative;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: rgba(18, 18, 18, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .user-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .user-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #ffffff;
+            text-decoration: none;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .user-dropdown-item:hover {
+            background: rgba(238, 37, 36, 0.1);
+            color: #ee2524;
+        }
+
+        .user-dropdown-item i {
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .user-dropdown-item:not(:last-child) {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .icons-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .icons-menu .iconfont-wrapper {
+            position: relative;
+        }
+
+        .cart-badge-container {
+            position: relative;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ee2524;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            z-index: 10;
+        }
+    </style>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Firebase Configuration -->
+    <script src="admin/js/firebase-config.js"></script>
+    
+    <!-- Analytics Helper -->
+    <script src="admin/js/analytics.js"></script>
+    
+    <!-- Visitor Tracking -->
+    <script src="admin/js/visitor-tracking.js"></script>
+    
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/dropdown/js/navbar-dropdown.js"></script>
+    <script src="assets/smoothscroll/smooth-scroll.js"></script>
+    <script src="assets/theme/js/script.js"></script>
+</body>
+</html>
+

@@ -4081,13 +4081,26 @@
             // Force inline style with !important - only show if admin
             if (isAdmin) {
               adminButton.setAttribute('style', 'display: flex !important;');
+              // Initialize button text to correct state
+              if (window.contentEditor && window.contentEditor.isEditMode) {
+                const currentEditMode = window.contentEditor.isEditMode();
+                console.log('Admin button init - currentEditMode:', currentEditMode);
+                adminButton.querySelector('span').textContent = currentEditMode ? 'Exit Edit' : 'Admin';
+                adminButton.classList.toggle('edit-mode-active', currentEditMode);
+              } else {
+                // Default to 'Admin' if contentEditor not ready
+                console.log('Admin button init - contentEditor not ready');
+                adminButton.querySelector('span').textContent = 'Admin';
+                adminButton.classList.remove('edit-mode-active');
+              }
               // Add click handler to toggle content editing
               adminButton.onclick = function(e) {
                 e.preventDefault();
                 if (window.contentEditor && window.contentEditor.toggle) {
                   window.contentEditor.toggle();
                   // Update button text to show current mode
-                  const editMode = window.contentEditor.isEditMode;
+                  const editMode = window.contentEditor.isEditMode();
+                  console.log('Admin button click - editMode:', editMode);
                   adminButton.querySelector('span').textContent = editMode ? 'Exit Edit' : 'Admin';
                   adminButton.classList.toggle('edit-mode-active', editMode);
                 }
@@ -4254,6 +4267,18 @@
       console.log('Admin button display:', adminBtn ? adminBtn.style.display : 'not found');
       console.log('Edit toggle element:', editBtn);
       console.log('Edit toggle display:', editBtn ? editBtn.style.display : 'not found');
+      
+      // Ensure admin button shows correct text by default
+      if (adminBtn && window.contentEditor && window.contentEditor.isEditMode) {
+        const currentEditMode = window.contentEditor.isEditMode();
+        console.log('Admin button forced init - currentEditMode:', currentEditMode);
+        adminBtn.querySelector('span').textContent = currentEditMode ? 'Exit Edit' : 'Admin';
+        adminBtn.classList.toggle('edit-mode-active', currentEditMode);
+      } else if (adminBtn) {
+        console.log('Admin button forced init - contentEditor not available');
+        adminBtn.querySelector('span').textContent = 'Admin';
+        adminBtn.classList.remove('edit-mode-active');
+      }
       
       console.log('=== End Debug ===');
     };

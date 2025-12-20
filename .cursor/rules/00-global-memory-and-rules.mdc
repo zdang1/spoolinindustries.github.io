@@ -1,0 +1,447 @@
+---
+alwaysApply: true
+---
+
+## Scope
+This is a **global workflow rule** for this repository. It applies to **every** prompt, change, refactor, bugfix, feature, and doc update.
+
+---
+
+## Non-negotiables
+
+### 1) Always check `.cursor/rules/` first
+Before writing or modifying any code or docs:
+- Read **all** existing rules in `.cursor/rules/`
+- Follow the **most specific** rule when rules overlap
+- If a rule is missing or outdated, **update/add** a rule instead of silently deviating
+
+### 2) Always refine `memory.md` after each prompt
+After completing **every** user request (even small changes):
+- Update `memory.md` to reflect the **latest truth** of the project
+- Keep entries **useful and scannable**
+- Never skip this step
+
+---
+
+## Backend: Firebase requirements (global)
+
+### Firebase services used
+This project uses Firebase as the backend. Default assumptions unless the repo says otherwise:
+- **Firebase Authentication** for admin/staff access (role-based - currently basic auth, roles planned).
+- **Cloud Firestore** as the primary database for operational data.
+- **Firebase Storage** for images and attachments (job photos, quote attachments, product images).
+- **Firebase App Check** to reduce abuse and protect billing (when applicable - not yet implemented).
+- **Analytics tracking** via GA4/Firebase events (website + admin - partially implemented).
+- **Firebase Performance Monitoring** (planned for admin-health page).
+- **Firebase Crash Reporting** (planned for admin-health page).
+- Optional/when needed: **Cloud Functions** for server-side enforcement (webhooks, file cleanup, aggregations), but avoid adding Functions unless required.
+
+### Current Firebase Project
+- **Project ID**: `spoolin-industries`
+- **Config Location**: `admin/js/firebase-config.js`
+- **Hosting URL**: https://spoolin-industries.web.app
+- **Status**: Production deployment active
+
+### Do not redesign the backend ad-hoc
+- Do not introduce alternate databases or storage systems unless explicitly requested.
+- Do not store business-critical state only on the client.
+- **Exception**: Cart and wishlist are intentionally localStorage-only (client-side convenience features).
+- Do not add "temporary" collections without documenting them and adding rules.
+
+---
+
+## Firestore data model (authoritative schema)
+
+### Required global fields on most documents
+Unless a rule or existing code says otherwise, new documents should include:
+- `createdAt` (server timestamp) - **REQUIRED**
+- `updatedAt` (server timestamp) - **REQUIRED**
+- `createdBy` (uid) - **RECOMMENDED** for audit trail
+- `updatedBy` (uid) - **RECOMMENDED** for audit trail
+- `status` (string enum where applicable) - **REQUIRED** for entities with lifecycle
+- Optional: `isArchived` or `deletedAt` for soft-delete patterns (use when history/audit matters)
+
+### Currently Implemented Collections
+
+**✅ Products (FULLY IMPLEMENTED)**
+- `products/{productId}` - **ACTIVE COLLECTION**
+  - **Fields**:
+    - `name` (string, required) - Product name
+    - `sku` (string, optional) - SKU/Product code
+    - `description` (string, optional) - Product description
+    - `category` (string, optional) - Category (engine/cooling/driveline/utility/styling)
+    - `price` (number, required, >= 0) - Product price
+    - `stock` (number, default 0) - Stock quantity
+    - `status` (string, enum: "active"|"inactive"|"draft") - Product status
+    - `featured` (boolean, default false) - Featured product flag
+    - `images[]` (array) - Image objects: `{url: string, order: number, isPrimary: boolean}`
+    - `createdAt` (server timestamp) - Creation timestamp
+    - `updatedAt` (server timestamp) - Last update timestamp
+  - **Query**: Ordered by `createdAt` descending
+  - **Access**: Authenticated users only (read/write in admin), public read for active products (shop.html)
+  - **Implementation**: See `admin/js/products.js`
+  - **Frontend Display**: `shop.html` filters by `status: 'active'` for public display
+  - **Search/Filter**: Client-side filtering by name/description and category (in admin panel)
+
+### Planned Collections (from workflow diagrams)
+
+**🚧 Customers & Vehicles**
+- `customers/{customerId}` - Customer profiles
+- `vehicles/{vehicleId}` - Vehicle profiles per customer
+- `customers/{customerId}/vehicles/{vehicleId}` - Alternative nested structure
+- `customers/{customerId}/notes/{noteId}` - Customer notes subcollection
+
+**🚧 Sales Pipeline**
+- `leads/{leadId}` - Lead capture and pipeline
+- `leads/{leadId}/notes/{noteId}` - Lead notes subcollection
+- `leads/{leadId}/attachments/{attachmentId}` - Lead attachments subcollection
+- `quotes/{quoteId}` - Quote documents
+- `quotes/{quoteId}/items/{itemId}` - Quote line items subcollection
+- `quotes/{quoteId}/versions/{versionId}` - Quote version history subcollection
+- `invoices/{invoiceId}` - Invoice documents
+- `payments/{paymentId}` - Payment records
+- `creditNotes/{creditNoteId}` - Credit note documents
+
+**🚧 Production**
+- `jobs/{jobId}` - Job documents
+- `jobs/{jobId}/notes/{noteId}` - Job notes subcollection
+- `jobs/{jobId}/parts/{partId}` - Reserved/used parts subcollection
+- `jobs/{jobId}/stages/{stageId}` - Stage history subcollection
+- `jobs/{jobId}/checklists/{checklistId}` - QA checklists subcollection
+- `schedule/{eventId}` - Schedule events
+- `timeEntries/{entryId}` - Time tracking entries
+- `qaReports/{qaId}` - QA checklist reports
+- `qaReports/{qaId}/defects/{defectId}` - Defect records subcollection
+- `warranties/{warrantyId}` - Warranty claims
+- `warranties/{warrantyId}/rootCause/{rootCauseId}` - Root cause analysis subcollection
+- `warranties/{warrantyId}/fix/{fixId}` - Fix records subcollection
+
+**🚧 Inventory & Purchasing**
+- `inventory/{itemId}` - Inventory items
+- `inventory/{itemId}/adjustments/{adjustmentId}` - Stock adjustment subcollection
+- `inventory/{itemId}/reservations/{reservationId}` - Stock reservation subcollection
+- `categories/{categoryId}` - Product categories
+- `suppliers/{supplierId}` - Supplier records
+- `suppliers/{supplierId}/contacts/{contactId}` - Supplier contacts subcollection
+- `purchaseOrders/{poId}` - Purchase order documents
+- `purchaseOrders/{poId}/items/{itemId}` - PO line items subcollection
+- `purchaseOrders/{poId}/receipts/{receiptId}` - Receiving records subcollection
+
+**🚧 Finance**
+- `orders/{orderId}` - Customer orders (from shop)
+
+**🚧 Admin / Governance**
+- `users/{uid}` - Staff profile + roles metadata
+- `auditLogs/{logId}` - Append-only audit trail
+- `auditLogs/{logId}/flags/{flagId}` - Suspicious activity flags subcollection
+- `templates/{templateId}` - Template definitions (quotes, checklists, emails, SMS, service packages)
+- `integrations/{integrationId}` - Integration configurations
+- `integrations/webhooks/{webhookId}` - Webhook configurations
+- `integrations/apiKeys/{keyId}` - API key records (encrypted)
+- `systemNotices/{noticeId}` - System notices
+- `errorLogs/{logId}` - Error logs (optional, if not using Firebase Crash Reporting)
+
+**Note**: Only `products/` collection is currently implemented. All other collections are planned and documented in `workflows/` folder.
+
+---
+
+## Storage conventions (authoritative)
+
+### Currently Implemented Storage Paths
+
+**✅ Products (ACTIVE)**
+- Product images: `products/{productId}_{timestamp}_{filename}` (for existing products)
+- Product images: `products/{timestamp}_{filename}` (for new products before productId exists)
+- **Current Implementation**: See `admin/js/products.js` - `uploadImage()` function
+- **Metadata**: Stored in Firestore `products/{productId}/images[]` array with `{url, order, isPrimary}`
+
+### Planned Storage Paths (from workflow diagrams)
+
+**🚧 Sales Pipeline**
+- Quote attachments: `quotes/{quoteId}/{filename}`
+- Quote PDFs: `quotes/{quoteId}/quote_{quoteNumber}.pdf` (optional)
+- Lead attachments: `leads/{leadId}/{filename}`
+
+**🚧 Production**
+- Job photos: `jobs/{jobId}/photos/{filename}`
+- QA photos: `qa/{qaId}/photos/{filename}`
+- QA defect photos: `qa/{qaId}/defects/{defectId}/{filename}`
+- Warranty photos: `warranties/{warrantyId}/photos/{filename}`
+- Warranty root cause evidence: `warranties/{warrantyId}/rootCause/{filename}`
+- Warranty fix evidence: `warranties/{warrantyId}/fix/{filename}`
+
+**🚧 Customers & Vehicles**
+- Vehicle attachments: `vehicles/{vehicleId}/attachments/{filename}`
+- Vehicle fitment photos: `vehicles/{vehicleId}/fitment/{filename}`
+
+**🚧 Finance**
+- Invoice PDFs: `invoices/{invoiceId}/invoice_{invoiceNumber}.pdf` (optional)
+- Purchase order PDFs: `purchaseOrders/{poId}/po_{poNumber}.pdf` (optional)
+
+### File metadata requirements
+- **ALWAYS** store file metadata in Firestore (URL, path, size, contentType, uploadedAt, uploadedBy)
+- **NEVER** rely on Storage file listings as the only source of truth
+- For products: Store image metadata in `products/{productId}/images[]` array
+
+### Deletion rules
+- **Current Issue**: Product image deletion from Storage NOT implemented when product deleted
+- **Required**: If a document is deleted/archived, handle file cleanup via:
+  - a server-side process (preferred - Cloud Functions), or
+  - a clearly documented manual admin action
+- If automatic cleanup is not implemented, add a "Known issue / follow-up" entry in `memory.md`
+- **Known Issue**: Product deletion does not remove images from Storage (documented in memory.md)
+
+---
+
+## Authentication, roles, and security rules (required)
+
+### Role-based access
+- Admin panel must be restricted to authenticated users.
+- **Current Implementation**: Basic Firebase Authentication (all authenticated users have full access)
+- **Planned**: Role-based authorization (e.g., custom claims like `admin`, `manager`, `tech`, `sales`)
+- **Helper Function**: `requireAuth()` in `admin/js/firebase-config.js` checks authentication
+- Do not hardcode role logic in multiple places. Centralize permission checks.
+- **Future**: See `workflows/workflow-admin-users.md` for planned role management
+
+### Firestore/Storage rules are mandatory
+Any backend change that affects data access must include:
+- Updates to `firestore.rules` and/or `storage.rules`
+- A rules review for least privilege
+- Document the intent and access matrix in `memory.md`
+
+### Input validation
+- Do not trust client input.
+- Enforce required fields, types, and constraints:
+  - price >= 0
+  - stock >= 0
+  - timestamps are server-set where appropriate
+- Prefer server timestamps (`serverTimestamp`) for `createdAt/updatedAt`.
+
+### Audit logging
+When admin/staff changes any important entity (jobs, invoices, quotes, products, inventory):
+- Write an `auditLogs` entry capturing:
+  - entity type + entity id
+  - action (create/update/delete/transition)
+  - actor uid
+  - timestamp
+  - what changed (minimal diff or key fields)
+- **Current Status**: Audit logging NOT yet implemented
+- **Required**: Implement audit logging when building new admin modules
+- **Pattern**: See `workflows/workflow-admin-audit.md` for planned structure
+- **Note**: Product CRUD operations do NOT currently write to auditLogs (to be added)
+
+---
+
+## Analytics & observability requirements (required)
+
+### Event tracking standard
+For major user/admin actions, log events consistently:
+- Event names: `snake_case`
+- Always include key params (ids, category, status, value) but avoid PII.
+
+Minimum event coverage:
+- **Website funnel**: `lead_submit`, `quote_request_submit`, `call_click`, `email_click`, `map_click`, `product_view`, `add_to_cart`, `add_to_wishlist`, `share_product`
+- **Admin workflows**: 
+  - ✅ Implemented: `admin_login`, `create_product`, `update_product`, `delete_product`
+  - 🚧 Planned: `create_quote`, `send_quote`, `quote_accepted`, `create_job`, `job_stage_change`, `inventory_adjusted`, `po_created`, `po_received`, `invoice_sent`, `payment_recorded`
+- **Current Status**: Only product events are implemented. All other events are planned.
+
+Whenever you add a new workflow step:
+- Add/extend an analytics event
+- Document the event name + params in `memory.md`
+
+### Performance and error monitoring
+- Track slow loads and failed requests in a consistent way.
+- If the project uses Firebase Performance Monitoring / Crash reporting, keep instrumentation consistent and do not remove it.
+
+---
+
+## Project Structure & Admin Panel
+
+### Admin Panel Overview
+- **Total Pages**: 27 admin pages
+- **Implemented**: 3 pages (login, dashboard, products)
+- **Planned**: 24 pages (all others show "Coming Soon")
+- **File Naming**: All admin pages use `admin-` prefix (e.g., `admin-products.html`)
+- **Entry Point**: `admin-dashboard.html` (redirects from login)
+- **Authentication**: All pages require Firebase Auth via `requireAuth()` helper
+
+### Implemented Admin Pages (✅)
+1. **admin-login.html** - Firebase Authentication login with error handling
+2. **admin-dashboard.html** - Main navigation hub with quick links to all sections
+3. **admin-products.html** - Full CRUD operations with multiple image upload, search, filtering
+
+### Planned Admin Pages (🚧)
+See `workflows/` folder for detailed workflow diagrams for all 24 planned pages:
+- Sales Pipeline: leads, quotes, invoices
+- Production: jobs, schedule, time, qa, warranty
+- Customers: customers, vehicles
+- Inventory & Purchasing: inventory, categories, suppliers, purchase-orders
+- Analytics: reports, events, health
+- Settings: users, templates, integrations, audit
+- Additional: orders, services
+
+### Frontend Features (Public-Facing)
+
+**shop.html - Product Catalog**
+- **Product Display**: 
+  - Reads from `products/` Firestore collection
+  - Filters by `status: 'active'` for public display
+  - Displays featured products prominently
+  - Product cards show: image, name, price, category
+- **Product Detail Modal (PDP)**:
+  - Opens on product card click
+  - Image gallery with navigation (prev/next, thumbnails, keyboard support)
+  - Full product details: name, description, price, SKU, stock status
+  - Action buttons: Add to Cart, Add to Wishlist, Share
+- **Cart System**:
+  - localStorage-based (`CART_STORAGE_KEY`)
+  - Add/remove products
+  - Cart count badge in navigation
+  - No backend sync (intentional - client-side convenience)
+- **Wishlist System**:
+  - localStorage-based (`WISHLIST_STORAGE_KEY`)
+  - Add/remove products
+  - Visual feedback on product cards
+  - No backend sync (intentional - client-side convenience)
+- **Share Functionality**:
+  - Web Share API (native share dialog)
+  - Fallback to copy link if Web Share not available
+  - Shares product URL with product name
+- **Quick Actions**:
+  - "Add to Cart" button on product cards
+  - "Add to Wishlist" button on product cards
+  - Buttons use `event.stopPropagation()` to prevent modal opening
+- **Utilities**:
+  - `escapeHtml()` - XSS prevention for text content
+  - `escapeUrl()` - URL encoding for share links
+  - Both functions in global scope for accessibility
+
+### Workflow Diagrams
+- **Location**: `workflows/` folder
+- **Format**: Mermaid flowcharts in `.md` files
+- **Coverage**: All 27 admin pages documented
+- **Index**: `workflows/README.md` provides overview and navigation
+- **Status**: Diagrams show ✅ Implemented or 🚧 Planned status
+
+### File Structure Conventions
+- **Admin Pages**: `admin-*.html` in root directory
+- **Admin Assets**: `admin/css/` and `admin/js/` folders
+- **Workflow Docs**: `workflows/` folder
+- **Public Pages**: `index.html`, `shop.html` in root
+- **Firebase Config**: `firebase.json`, `firestore.rules`, `storage.rules` in root
+
+### Coding Conventions & Patterns
+
+**JavaScript Patterns**
+- Use Firebase SDK v9.22.0 compat mode (namespace-based API: `firebase.firestore()`, `firebase.auth()`, etc.)
+- Always use `async/await` for Firebase operations
+- Error handling: Try-catch blocks with user-friendly error messages
+- Global helper functions: `window.firebaseHelpers` for auth operations
+- Utility functions: Place in global scope if used across multiple functions (e.g., `escapeHtml`, `escapeUrl`)
+
+**HTML Structure**
+- Admin pages: Consistent sidebar structure across all pages
+- Modal pattern: Use `.modal-overlay` and `.modal` classes for modals
+- Form validation: HTML5 `required` attributes + JavaScript validation
+- Loading states: Show loading spinner during async operations
+
+**CSS Conventions**
+- CSS variables defined in `admin/css/admin.css`:
+  - `--admin-bg`: `#121212` (black background)
+  - `--admin-red-primary`: `#9f130f`
+  - `--admin-red-secondary`: `#cb2723`
+  - `--admin-text`: `#ffffff`
+  - `--admin-text-muted`: `#c7c7c7`
+  - `--admin-border`: `#2c2c2c`
+- Use existing component classes for consistency
+- Responsive design built-in
+
+**Firestore Patterns**
+- Always use `serverTimestamp()` for `createdAt` and `updatedAt`
+- Query ordering: Default to `orderBy('createdAt', 'desc')` for recent-first display
+- Error handling: Check for Firestore API enabled, database exists, security rules
+- Collection references: Store in variables (e.g., `productsCollection`) for reuse
+
+**Storage Patterns**
+- Upload path format: `{collection}/{entityId}_{timestamp}_{filename}` or `{collection}/{timestamp}_{filename}` for new entities
+- Metadata storage: Always store file metadata in Firestore, never rely on Storage listings
+- Error handling: Check for CORS errors, Storage rules, file protocol issues
+- Image preview: Use `FileReader` for client-side preview before upload
+
+## Local development expectations
+- Prefer using Firebase emulators for development/testing when available in the repo.
+- Do not commit real production config values.
+- Ensure environment separation (dev/staging/prod) is respected.
+- **Current Setup**: Firebase project `spoolin-industries` configured in `admin/js/firebase-config.js`
+- **Deployment**: Firebase Hosting at https://spoolin-industries.web.app
+- **Note**: Image uploads require web server (not file:// protocol) due to CORS
+
+---
+
+## What to write into `memory.md` every time
+
+Add a dated entry that includes:
+- **What changed** (features, UI, logic, data model, config, structure)
+- **Files touched** (paths)
+- **Key decisions** and the “why”
+- **New conventions** introduced (naming, patterns, folder usage)
+- **Dependencies** added/updated and reason
+- **Commands** relevant (build/test/dev/deploy) if changed
+- **Backend changes** (collections/fields/indexes/rules/storage paths/events)
+- **Known issues / follow-ups** (action items)
+- **Assumptions** made due to missing info (clearly labelled)
+
+If nothing changed (e.g., advice-only prompt), still add:
+- A short entry stating **no code changes**, plus any **decisions or next steps** agreed.
+
+---
+
+## Safety & hygiene
+- Do **not** put secrets, tokens, passwords, private keys, or 2FA info in `memory.md`
+- Avoid personal customer data; keep examples anonymised
+- If sensitive values appear in code/config, store them in env vars and document the **name** only (e.g., `FIREBASE_API_KEY`)
+- Never log PII in analytics events (names, emails, phone numbers, addresses)
+
+---
+
+## Current Implementation Status Summary
+
+### ✅ Fully Implemented
+- **Admin Login**: Firebase Authentication with error handling
+- **Admin Dashboard**: Navigation hub with quick links
+- **Admin Products**: Full CRUD with multiple images, search, filtering
+- **Frontend Shop**: Product display, cart, wishlist, share (localStorage-based)
+- **Firebase Config**: Project `spoolin-industries` configured
+- **Deployment**: Firebase Hosting active at https://spoolin-industries.web.app
+
+### 🚧 Planned (24 admin pages)
+- All other admin pages show "Coming Soon" with planned features
+- Workflow diagrams created in `workflows/` folder for all planned pages
+- See individual workflow files for detailed implementation plans
+
+### Known Limitations
+- **Product Images**: Deletion from Storage not implemented when product deleted
+- **Audit Logging**: Not yet implemented (required for future modules)
+- **Analytics Events**: Only product events implemented, others planned
+- **Role-Based Access**: Basic auth only, role-based access control planned
+- **Client-Side State**: Cart/wishlist in localStorage only (no backend sync)
+
+### Key Files Reference
+- **Firebase Config**: `admin/js/firebase-config.js`
+- **Product Logic**: `admin/js/products.js`
+- **Admin Styles**: `admin/css/admin.css`
+- **Workflow Docs**: `workflows/README.md` (index) and `workflows/workflow-*.md` (individual pages)
+- **Project Memory**: `memory.md` (complete change history)
+
+## Checklist (must run mentally before responding)
+- [ ] I read `.cursor/rules/` and followed the most specific applicable rule
+- [ ] I checked `workflows/` folder for relevant workflow diagrams
+- [ ] I implemented the requested change(s) cleanly and consistently
+- [ ] I respected Firebase backend conventions (Firestore schema, Storage paths, auth roles)
+- [ ] I updated rules/indexes if access patterns changed
+- [ ] I added/updated analytics events for meaningful workflow changes
+- [ ] I wrote/updated audit logging for important mutations (or added a follow-up)
+- [ ] I updated `memory.md` with what changed, files touched, backend changes, and next steps
+- [ ] I did not introduce secrets into any tracked file
+- [ ] I followed existing file naming conventions (`admin-` prefix for admin pages)

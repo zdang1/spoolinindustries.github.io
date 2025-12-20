@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Spoolin Industries</title>
+    <link rel="stylesheet" href="admin/css/admin.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-logo">
+                <img src="assets/images/e564d451be837b57-1192x710.png-108x64.png" alt="Spoolin Industries">
+            </div>
+            <h1>Admin Login</h1>
+            
+            <div id="login-error" class="login-error" style="display: none;"></div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        class="form-control" 
+                        placeholder="admin@spoolinindustries.com.au"
+                        required
+                        autocomplete="email"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        class="form-control" 
+                        placeholder="Enter your password"
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <a href="index.html" class="btn btn-secondary" style="flex: 1; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>
+                        Back
+                    </a>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">
+                        Sign In
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK - Compat version for easier usage -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    
+    <!-- Firebase Config -->
+    <script src="admin/js/firebase-config.js"></script>
+    
+    <!-- Login Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check if already logged in
+            const isAuthenticated = await window.firebaseHelpers.checkAuth();
+            if (isAuthenticated) {
+                // Redirect to dashboard
+                window.location.href = 'admin-dashboard.html';
+                return;
+            }
+            
+            // Setup login form
+            const loginForm = document.getElementById('login-form');
+            const errorDiv = document.getElementById('login-error');
+            
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const submitBtn = loginForm.querySelector('button[type="submit"]');
+                
+                if (!email || !password) {
+                    showError('Please enter both email and password.');
+                    return;
+                }
+                
+                // Disable button and show loading
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Signing in...';
+                errorDiv.style.display = 'none';
+                
+                try {
+                    await window.firebaseHelpers.signIn(email, password);
+                    
+                    // Success - redirect to dashboard
+                    submitBtn.textContent = 'Success! Redirecting...';
+                    setTimeout(() => {
+                        window.location.href = 'admin-dashboard.html';
+                    }, 500);
+                } catch (error) {
+                    console.error('Login error:', error);
+                    
+                    let errorMessage = 'Login failed. Please try again.';
+                    
+                    switch (error.code) {
+                        case 'auth/user-not-found':
+                            errorMessage = 'No account found with this email.';
+                            break;
+                        case 'auth/wrong-password':
+                            errorMessage = 'Incorrect password.';
+                            break;
+                        case 'auth/invalid-email':
+                            errorMessage = 'Invalid email address.';
+                            break;
+                        case 'auth/user-disabled':
+                            errorMessage = 'This account has been disabled.';
+                            break;
+                        case 'auth/too-many-requests':
+                            errorMessage = 'Too many failed attempts. Please try again later.';
+                            break;
+                        case 'auth/network-request-failed':
+                            errorMessage = 'Network error. Please check your connection.';
+                            break;
+                    }
+                    
+                    showError(errorMessage);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Sign In';
+                }
+            });
+            
+            function showError(message) {
+                errorDiv.textContent = message;
+                errorDiv.className = 'login-error alert alert-error';
+                errorDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
+

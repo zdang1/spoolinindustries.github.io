@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Products collection - public read for website, authenticated write for admin
+    match /products/{productId} {
+      allow read: if true; // Public read for website display
+      allow write: if request.auth != null; // Only authenticated admins can write
+    }
+    
+    // Orders collection - authenticated admins can read/write, customers can read their own orders
+    match /orders/{orderId} {
+      allow read: if request.auth != null && (
+        // Admin can read all orders
+        true ||
+        // Customer can read their own order (if customerId field matches their uid)
+        resource.data.customerId == request.auth.uid
+      );
+      allow write: if request.auth != null; // Only authenticated admins can write
+    }
+    
+    // Services collection - only authenticated admins can read/write
+    match /services/{serviceId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Users collection - only authenticated admins can read/write
+    match /users/{userId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Analytics Events collection - authenticated users can read and write
+    match /analyticsEvents/{eventId} {
+      allow read, write: if request.auth != null; // Authenticated users can read and write
+    }
+    
+    // Allow collection queries on analyticsEvents (needed for .get() queries)
+    match /analyticsEvents/{document=**} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Integrations collection - only authenticated admins can read/write
+    match /integrations/{integrationId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Site content collection - public read for website display, authenticated write for admin
+    match /siteContent/{document} {
+      allow read: if true; // Public read for website content
+      allow write: if request.auth != null; // Only authenticated admins can write
+    }
+    
+    // Also allow nested paths in siteContent
+    match /siteContent/{document}/{subPath=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Active Visitors collection - public can create/update/delete their own session document
+    // Both public and authenticated users can read for real-time tracking
+    match /activeVisitors/{sessionId} {
+      // Allow read for both public and authenticated users (needed for admin real-time tracking)
+      allow read: if true;
+      // Allow public writes (visitor tracking from public pages)
+      // Note: Application code enforces that each session only writes to its own document ID
+      allow create: if true;
+      allow update: if true;
+      allow delete: if true;
+    }
+    
+    // Allow collection queries on activeVisitors (needed for real-time listener)
+    match /activeVisitors/{document=**} {
+      allow read: if true;
+    }
+  }
+}
+
+
+
+
+
+

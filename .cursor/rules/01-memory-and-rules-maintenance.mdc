@@ -1,0 +1,56 @@
+---
+alwaysApply: true
+---
+## Memory and Rules Maintenance (Mandatory After Every Prompt)
+
+This rule **MUST** be followed after **every** user prompt, regardless of the task type (code changes, questions, documentation, bug fixes, etc.).
+
+### 1) Update `memory.md` After Every Prompt
+
+**REQUIRED**: After completing any user request, update `memory.md` with:
+
+- **What changed** (features, UI, logic, data model, config, structure)
+- **Files touched** (paths)
+- **Key decisions** and the "why"
+- **New conventions** introduced (naming, patterns, folder usage)
+- **Dependencies** added/updated and reason
+- **Commands** relevant (build/test/dev/deploy) if changed
+- **Backend changes** (collections/fields/indexes/rules/storage paths/events)
+- **Known issues / follow-ups** (action items)
+- **Assumptions** made due to missing info (clearly labelled)
+
+**Even if nothing changed** (e.g., advice-only prompt), still add:
+- A short entry stating **no code changes**, plus any **decisions or next steps** agreed.
+
+**Format**: Use dated entries with clear sections. Keep entries useful and scannable.
+
+### 2) Update and Refine Rules in `.cursor/rules/` After Every Prompt
+
+**REQUIRED**: After completing any user request, review and update rules as needed:
+
+- **Check for outdated information** in existing rule files
+- **Add new patterns/conventions** discovered during implementation
+- **Update data models** if collections/fields changed
+- **Refine coding patterns** if new best practices emerge
+- **Update status indicators** (✅ Implemented, 🚧 Planned, etc.)
+- **Fix inconsistencies** between rules and actual implementation
+- **Document new workflows** or processes discovered
+
+**Process**:
+1. Read through all existing rule files in `.cursor/rules/`
+2. Identify what needs updating based on the work just completed
+3. Update the relevant rule file(s) with accurate, current information
+4. Ensure rules reflect the **latest truth** of the project
+
+**Priority**: If rules conflict with implementation, **update the rules** to match reality (unless the implementation is clearly wrong).
+
+### Enforcement
+
+- This is a **non-negotiable** workflow step
+- **Never skip** updating `memory.md` and reviewing rules
+- These updates are part of the completion criteria for every task
+- If unsure what to document, err on the side of over-documentation
+
+---
+
+**Note**: This rule works in conjunction with `00-global-memory-and-rules.mdc` which provides the detailed structure and conventions for both `memory.md` entries and rule file organization.

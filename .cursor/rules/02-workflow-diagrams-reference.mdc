@@ -1,0 +1,181 @@
+---
+alwaysApply: true
+---
+## Mandatory Workflow Consultation
+
+### Before Implementing Any Admin Feature
+
+**REQUIRED**: Before writing code for any admin page or feature:
+
+1. **Read the relevant workflow diagram** from `workflows/workflow-admin-*.md`
+2. **Check the status** (✅ Implemented vs 🚧 Planned)
+3. **Review integration points** (Firestore collections, Storage paths, cross-module relationships)
+4. **Understand the data flow** from the Mermaid flowchart
+5. **Check related pages** for integration requirements
+
+### When Implementing Planned Features
+
+For pages marked 🚧 **Planned - Coming Soon**:
+
+- Follow the workflow diagram as the **implementation blueprint**
+- Implement features in the order shown in the diagram
+- Use the documented Firestore collections and Storage paths
+- Respect the integration points with other modules
+- Update the workflow diagram status to ✅ when complete
+
+### When Modifying Implemented Features
+
+For pages marked ✅ **Fully Implemented**:
+
+- Check the workflow diagram to understand current implementation
+- Ensure changes align with documented data flow
+- Update the workflow diagram if the implementation deviates
+- Document any new integration points or collections used
+
+---
+
+## Workflow Diagram Structure
+
+Each workflow diagram contains:
+
+1. **Status**: ✅ Implemented or 🚧 Planned
+2. **Overview**: Description of the page/module
+3. **Mermaid Flowchart**: Visual workflow representation
+4. **Planned Features** (for planned pages): Feature list
+5. **Integration Points**:
+   - Firestore collections used
+   - Storage paths
+   - Cross-module relationships
+6. **Related Pages**: Links to related admin pages
+7. **Implementation Notes**: Technical considerations
+
+---
+
+## Key Integration Patterns
+
+### Data Flow Patterns (from workflows/README.md)
+
+1. **Sales Pipeline**: Leads → Quotes → Jobs → Invoices
+2. **Production**: Jobs → Schedule → Time Tracking → QA → Warranty
+3. **Inventory**: Products → Inventory → Purchase Orders → Suppliers
+4. **Customers**: Customers → Vehicles → Jobs/Quotes/Invoices
+
+### Common Collections (from workflows/README.md)
+
+- `products/` - Product catalog
+- `customers/` - Customer records
+- `vehicles/` - Vehicle records
+- `jobs/` - Job records
+- `quotes/` - Quote records
+- `invoices/` - Invoice records
+- `leads/` - Lead records
+- `inventory/` - Inventory items
+- `suppliers/` - Supplier records
+- `purchaseOrders/` - Purchase order records
+- `schedule/` - Schedule events
+- `timeEntries/` - Time tracking entries
+- `qaReports/` - QA checklist reports
+- `warranties/` - Warranty claims
+- `auditLogs/` - Audit trail
+- `users/` - User profiles
+- `templates/` - Template definitions
+- `integrations/` - Integration configurations
+
+---
+
+## Workflow Diagram Maintenance
+
+### When to Update Workflow Diagrams
+
+**REQUIRED**: Update the relevant workflow diagram when:
+
+1. **Status Changes**: When a planned page becomes implemented, change status from 🚧 to ✅
+2. **Implementation Deviates**: If actual implementation differs from planned workflow, update the diagram
+3. **New Collections**: If new Firestore collections are added, document them in integration points
+4. **New Storage Paths**: If new Storage paths are used, document them
+5. **New Integrations**: If new cross-module relationships are created, document them
+6. **Feature Changes**: If features are added/removed/modified, update the diagram
+
+### How to Update Workflow Diagrams
+
+1. Open the relevant `workflows/workflow-admin-*.md` file
+2. Update the Mermaid flowchart if workflow changed
+3. Update the "Planned Features" section (if planned) or add "Implemented Features" (if implemented)
+4. Update "Integration Points" with actual collections/paths used
+5. Update "Related Pages" if new relationships created
+6. Update "Implementation Notes" with actual technical decisions
+7. Update `workflows/README.md` if status changed (✅ vs 🚧)
+
+---
+
+## Workflow Diagram Reference by Page
+
+### ✅ Fully Implemented (3 pages)
+
+1. **admin-login.html** → `workflows/workflow-admin-login.md`
+2. **admin-dashboard.html** → `workflows/workflow-admin-dashboard.md`
+3. **admin-products.html** → `workflows/workflow-admin-products.md`
+
+### 🚧 Planned - Coming Soon (24 pages)
+
+#### Sales Pipeline
+4. **admin-leads.html** → `workflows/workflow-admin-leads.md`
+5. **admin-quotes.html** → `workflows/workflow-admin-quotes.md`
+6. **admin-invoices.html** → `workflows/workflow-admin-invoices.md`
+
+#### Production
+7. **admin-jobs.html** → `workflows/workflow-admin-jobs.md`
+8. **admin-schedule.html** → `workflows/workflow-admin-schedule.md`
+9. **admin-time.html** → `workflows/workflow-admin-time.md`
+10. **admin-qa.html** → `workflows/workflow-admin-qa.md`
+11. **admin-warranty.html** → `workflows/workflow-admin-warranty.md`
+
+#### Customers
+12. **admin-customers.html** → `workflows/workflow-admin-customers.md`
+13. **admin-vehicles.html** → `workflows/workflow-admin-vehicles.md`
+
+#### Inventory & Purchasing
+14. **admin-inventory.html** → `workflows/workflow-admin-inventory.md`
+15. **admin-categories.html** → `workflows/workflow-admin-categories.md`
+16. **admin-suppliers.html** → `workflows/workflow-admin-suppliers.md`
+17. **admin-purchase-orders.html** → `workflows/workflow-admin-purchase-orders.md`
+
+#### Analytics
+18. **admin-reports.html** → `workflows/workflow-admin-reports.md`
+19. **admin-events.html** → `workflows/workflow-admin-events.md`
+20. **admin-health.html** → `workflows/workflow-admin-health.md`
+
+#### Settings
+21. **admin-users.html** → `workflows/workflow-admin-users.md`
+22. **admin-templates.html** → `workflows/workflow-admin-templates.md`
+23. **admin-integrations.html** → `workflows/workflow-admin-integrations.md`
+24. **admin-audit.html** → `workflows/workflow-admin-audit.md`
+
+#### Additional
+25. **admin-orders.html** → `workflows/workflow-admin-orders.md`
+26. **admin-services.html** → `workflows/workflow-admin-services.md`
+
+---
+
+## Enforcement
+
+- **Before coding**: Always check the workflow diagram first
+- **During coding**: Follow the documented data flow and integration points
+- **After coding**: Update the workflow diagram if implementation differs
+- **Status updates**: Change 🚧 to ✅ when page is fully implemented
+
+---
+
+## Exceptions
+
+- **Minor bug fixes**: Don't require workflow diagram updates for small bug fixes
+- **UI-only changes**: Don't require updates if only UI/styling changes (no data flow changes)
+- **Performance optimizations**: Don't require updates if only performance improvements (no functional changes)
+
+---
+
+## Related Rules
+
+- See `00-global-memory-and-rules.mdc` for Firebase backend requirements
+- See `01-memory-and-rules-maintenance.mdc` for memory.md update requirements
+- See `workflows/README.md` for complete workflow diagram index

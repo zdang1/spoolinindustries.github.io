@@ -435,24 +435,6 @@
     
     <!-- Scripts -->
     <script>
-        // #region agent log
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const metricsGrid = document.getElementById('metrics-grid');
-                const allCards = metricsGrid ? Array.from(metricsGrid.querySelectorAll('.metric-card')) : [];
-                const cardTexts = allCards.map((card, idx) => {
-                    const h3 = card.querySelector('h3');
-                    const rect = card.getBoundingClientRect();
-                    return `Card${idx+1}: ${h3 ? h3.textContent : 'no title'} (visible: ${rect.width > 0 && rect.height > 0})`;
-                });
-                const liveCard = document.getElementById('metric-live-visitors');
-                const liveCardParent = liveCard ? liveCard.closest('.metric-card') : null;
-                const gridStyles = metricsGrid ? window.getComputedStyle(metricsGrid) : null;
-                const liveCardRect = liveCardParent ? liveCardParent.getBoundingClientRect() : null;
-                fetch('http://127.0.0.1:7243/ingest/5f4ec72d-ca00-4592-8679-29f4832c95bd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'admin-reports.html:inline',message:'DOMContentLoaded HTML check',data:{totalCards:allCards.length,cardTitles:cardTexts.join(' | '),liveCardExists:!!liveCard,liveCardParentExists:!!liveCardParent,gridOverflow:gridStyles?.overflow,gridHeight:gridStyles?.height,gridMaxHeight:gridStyles?.maxHeight,liveCardTop:liveCardRect?.top,liveCardLeft:liveCardRect?.left,liveCardWidth:liveCardRect?.width,liveCardHeight:liveCardRect?.height,gridRectTop:metricsGrid?metricsGrid.getBoundingClientRect().top:null,gridRectHeight:metricsGrid?metricsGrid.getBoundingClientRect().height:null},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-            }, 100);
-        });
-        // #endregion
         
         document.addEventListener('DOMContentLoaded', async () => {
             await window.firebaseHelpers.requireAuth();
